@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>EEG Tutor – Pro v1.9.3 (Single-file, fixes)</title>
+<title>EEG Tutor – Pro v1.9.4 (GitHub fixes)</title>
 <style>
   :root{ --bg:#0f1115; --card:#151923; --muted:#9aa3b2; --text:#e8ecf1; --accent:#6ee7ff; --accent2:#a78bfa; --good:#22c55e; --bad:#ef4444; }
   *{box-sizing:border-box}
@@ -45,7 +45,7 @@
 <header>
   <div class="row">
     <h1>EEG Tutor</h1>
-    <span class="badge">Pro v1.9.3 • Single-file</span>
+    <span class="badge">Pro v1.9.4 • Single-file</span>
   </div>
   <div class="row">
     <span class="pill lang" id="langBtn">HU ▾</span>
@@ -120,7 +120,7 @@
     <div class="card" style="margin-top:10px">
       <div class="section-title" id="scoreHdr">Pontszám</div>
       <div class="row" style="justify-content:space-between">
-        <div id="hitLbl">Találatok: <span id="hits" class="score">0</span> / <span id="total">0</span></div>
+        <div id="hitLbl"><span id="hitsLblTxt">Találatok</span>: <span id="hits" class="score">0</span> / <span id="total">0</span></div>
         <div><span id="totalLbl">Összesen</span>: <span id="pct" class="score">0%</span></div>
       </div>
       <div class="progress" style="margin-top:8px"><div id="bar"></div></div>
@@ -158,6 +158,14 @@
 <div id="errorBanner"></div>
 
 <script>
+/* ==== Safe storage (GitHub Pages/iframes) ==== */
+const SafeStore = (()=> {
+  try { const t='__eeg_test__'; localStorage.setItem(t,'1'); localStorage.removeItem(t); return localStorage; }
+  catch(e){ const mem={}; return {getItem:k=>mem[k]??null, setItem:(k,v)=>{mem[k]=String(v)}, removeItem:k=>{delete mem[k]}}; }
+})();
+const getLS=(k,def=null)=>{ try{ const v=SafeStore.getItem(k); return v===null?def:v; }catch(e){ return def; } };
+const setLS=(k,v)=>{ try{ SafeStore.setItem(k,v); }catch(e){} };
+
 /* ==== i18n (HU/EN) ==== */
 const I18N = {
   HU: {
@@ -201,16 +209,16 @@ const I18N = {
     gained:"XP gained: ", bestPossible:"Max: ", lessonsBeginner:"Beginner", lessonsIntermediate:"Intermediate", lessonsExpert:"Expert"
   }
 };
-let LANG = localStorage.getItem("eeg_lang") || "HU";
+let LANG = getLS("eeg_lang","HU") || "HU";
 function tK(k){ return I18N[LANG][k] || k; }
-function setLang(L){ LANG=L; localStorage.setItem("eeg_lang",L); syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons(); }
+function setLang(L){ LANG=L; setLS("eeg_lang",L); syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); buildLessonLevels(); refreshLessons(); }
 
 /* ==== Simple XP (no profiles) ==== */
-let XP = parseInt(localStorage.getItem('eeg_xp')||'0',10);
-let BEST = parseInt(localStorage.getItem('eeg_best')||'0',10);
-let STREAK = parseInt(localStorage.getItem('eeg_streak')||'0',10);
+let XP = parseInt(getLS('eeg_xp','0')||'0',10);
+let BEST = parseInt(getLS('eeg_best','0')||'0',10);
+let STREAK = parseInt(getLS('eeg_streak','0')||'0',10);
 function levelFromXP(x){ return Math.floor(x/100)+1; }
-function saveProgress(){ localStorage.setItem('eeg_xp', String(XP)); localStorage.setItem('eeg_best', String(BEST)); localStorage.setItem('eeg_streak', String(STREAK)); }
+function saveProgress(){ setLS('eeg_xp', String(XP)); setLS('eeg_best', String(BEST)); setLS('eeg_streak', String(STREAK)); }
 function awardXP(n){ XP+=n; saveProgress(); refreshMeta(); }
 function medalsList(){ const m=[]; if(STREAK>=5)m.push('Kombájn – 5 helyes egymás után'); if(BEST>=90)m.push('Sasszem – 90%+'); if(XP>=300)m.push('Maraton – 300 XP'); return m; }
 function refreshMeta(){
@@ -251,18 +259,77 @@ function materialize(c){
   return c;
 }
 
-/* ==== Cases (rövidített, de működő lista) ==== */
+/* ==== Cases (bővített magyarázatok) ==== */
 const CASES = [
-  makeCase('normal_alpha',{ titleHU:'Normál éber – occipitalis alfa', titleEN:'Normal awake – occipital alpha', montage:'10–20', descHU:'8–10 Hz occipitalis alfa, reaktív.', descEN:'8–10 Hz occipital alpha, reactive.', explainHU:'Szimmetrikus, reaktív szemnyitásra. Ha aszimmetria/reaktivitáshiány van, gondolj kórfolyamatra.', explainEN:'Symmetric, reactive to eye opening. Loss of reactivity/asymmetry may suggest pathology.', tipsHU:['Szimmetria ellenőrzése','Szemnyitásra gátlódik','Nincs hegyes spike'], tipsEN:['Check symmetry','Blocked by eye opening','No sharp spikes'], diff:'beginner', label:'normal alpha', channels:['O1-O2','P3-O1','P4-O2','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:9, includeInQuiz:false, quizTargetHU:'alfa ritmus', quizTargetEN:'alpha rhythm', tags:['benign','awake'] }),
-  makeCase('sleep_spindles',{ titleHU:'N2 – alvási orsók', titleEN:'N2 – sleep spindles', montage:'10–20', descHU:'12–14 Hz orsók centrálisan.', descEN:'12–14 Hz central spindles.', explainHU:'Trains, gyakran K-komplex kíséri. Nem epileptiform.', explainEN:'Trains; often with K-complex. Non-epileptiform.', tipsHU:['Centrális maximum','Vonatszerű megjelenés','Nincs lassú hullám utána, mint SW-ben'], tipsEN:['Central maximum','Train-like','No paired slow wave as in SW'], diff:'beginner', label:'sleep spindles', channels:['C3-P3','C4-P4','Fz-Cz'], spikesFn:()=>[], magFn:()=>0, baseHz:13, includeInQuiz:false, quizTargetHU:'orsó', quizTargetEN:'spindle', tags:['sleep','benign'] }),
-  makeCase('eyeblink',{ titleHU:'Artefaktum – pislogás', titleEN:'Artifact – eye blink', montage:'Frontális', descHU:'Nagy frontális lassú hullám.', descEN:'Large frontal slow deflection.', explainHU:'Sima csúcs, polaritás; nem meredek.', explainEN:'Smooth peak with polarity; not steep.', tipsHU:['Frontális túlsúly','Sima lefutás','Nem követi lassú hullám'], tipsEN:['Frontal predominance','Smooth','No spike-slow pairing'], diff:'beginner', label:'eye blink', channels:['Fp1-F3','Fp2-F4','Fz-Cz'], spikesFn:(i)=> (i===0?[150,520]:[]), magFn:(i)=> (i===0?6:2), noise:0.3, includeInQuiz:false, quizTargetHU:'pislogás', quizTargetEN:'blink', tags:['artifact'] }),
-  makeCase('gsw3',{ titleHU:'Generalizált tüske-hullám (~3 Hz)', titleEN:'Generalized spike–wave (~3 Hz)', montage:'10–20 ref', descHU:'Szinkron 3 Hz SW.', descEN:'Synchronous 3 Hz SW.', explainHU:'Spike + lassú hullám 2.5–3.5 Hz; topográfia/időzítés konzisztens.', explainEN:'Spike + slow wave 2.5–3.5 Hz; consistent timing/topography.', tipsHU:['Szinkron több csatornán','Spike után lassú hullám','Artefaktumtól következetesség különíti el'], tipsEN:['Synchronous across channels','Slow wave follows spike','Consistency helps separate artifacts'], diff:'beginner', label:'generalized spike-wave', channels:['Fp1-F3','F3-C3','C3-P3','P3-O1','Fp2-F4','F4-C4','C4-P4','P4-O2'], spikesFn:()=>[160,190,220,250,280,310,340], magFn:(i)=>5-(i%3), includeInQuiz:true, quizTargetHU:'tüske-hullám', quizTargetEN:'spike–wave', tags:['generalized','ictal/interictal'] }),
-  makeCase('lt_spikes',{ titleHU:'Bal temporális tüskék', titleEN:'Left temporal spikes', montage:'Bitemporális', descHU:'Fokális T3/T5 max.', descEN:'Focal T3/T5 max.', explainHU:'Aszinkron több csatornán, keskeny meredek csúcs.', explainEN:'Asynchronous across channels, narrow steep peak.', tipsHU:['Ipsilaterális maximum','Meredek fel/le','Gyakran kíséri lassú hullám'], tipsEN:['Ipsilateral max','Steep up/down','Often followed by slow'], diff:'intermediate', label:'left temporal spikes', channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'], spikesFn:(i)=> (i<3?[200,410,640]:[205,415,645]), magFn:(i)=> (i<3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
-  makeCase('rt_spikes',{ titleHU:'Jobb temporális tüskék', titleEN:'Right temporal spikes', montage:'Bitemporális', descHU:'Fokális T4/T6 max.', descEN:'Focal T4/T6 max.', explainHU:'Időben szórt, jobb oldali dominancia.', explainEN:'Temporally scattered, right dominance.', tipsHU:['Ipsilaterális max','Keskeny csúcs','Topográfia segít'], tipsEN:['Ipsilateral max','Narrow peak','Use topography'], diff:'intermediate', label:'right temporal spikes', channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'], spikesFn:(i)=> (i>=3?[220,430,660]:[225,435,665]), magFn:(i)=> (i>=3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
-  makeCase('lpds',{ titleHU:'LPDs – jobb', titleEN:'LPDs – right', montage:'Referenciális', descHU:'Periodikus jobb oldali kisülések.', descEN:'Periodic right-sided discharges.', explainHU:'IIC spektrum; periodikus, laterális mintázat.', explainEN:'On IIC; periodic and lateralized.', tipsHU:['1–2 s periódus','Laterális dominancia','Klinikai korrelátum fontos'], tipsEN:['1–2 s period','Lateralized','Clinical correlation'], diff:'hard', label:'lpds', channels:['F8-T4','T4-T6','T6-O2','F7-T3','T3-T5'], spikesFn:(i)=> (i<3?[150,300,450,600,750]:[]), magFn:(i)=> (i<3?4:1), includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','focal'] }),
-  makeCase('gpeds',{ titleHU:'GPDs – generalizált periodikus', titleEN:'GPDs – generalized periodic', montage:'Referenciális', descHU:'Generalizált periodicitás.', descEN:'Generalized periodicity.', explainHU:'Metabolikus/anoxiás okok; nem feltétlen ictus.', explainEN:'Metabolic/post-anoxic; not necessarily ictal.', tipsHU:['Széleskörű','Periodikus','Klinikum dönt'], tipsEN:['Diffuse','Periodic','Clinical context'], diff:'hard', label:'gpds', channels:['F3-C3','C3-P3','F4-C4','C4-P4','P3-O1','P4-O2'], spikesFn:(i)=>[200,400,600,800], magFn:(i)=>3, includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','generalized'] }),
-  makeCase('triphasic',{ titleHU:'Triphasic hullámok', titleEN:'Triphasic waves', montage:'Referenciális', descHU:'Metabolikus encephalopathia mintázat.', descEN:'Metabolic encephalopathy pattern.', explainHU:'Három fázis; frontális túlsúly; nem epileptiform.', explainEN:'Three phases; frontal predominance; non-epileptiform.', tipsHU:['Frontális túlsúly','Három fázis','Nem spike–slow'], tipsEN:['Frontal pred.','Three phases','Not spike–slow'], diff:'hard', label:'triphasic waves', channels:['Fp1-F3','F3-C3','Fz-Cz','Fp2-F4','F4-C4'], spikesFn:()=>[140,300,470,640], magFn:()=>2, includeInQuiz:true, quizTargetHU:'triphasicus komplexek', quizTargetEN:'triphasic complexes', tags:['encephalopathy'] }),
-  makeCase('burst_supp',{ titleHU:'Burst-suppression', titleEN:'Burst-suppression', montage:'Referenciális', descHU:'Rövid burst + csend.', descEN:'Short bursts with suppression.', explainHU:'Anoxia/anesztézia; burst/supp ratio.', explainEN:'Anoxia/anesthesia; burst/supp ratio.', tipsHU:['Nagyon alacsony alap','Burst szigetek','Hosszú suppressio súlyosabb'], tipsEN:['Very low baseline','Burst islands','Long suppression worse'], diff:'hard', label:'burst-suppression', channels:['C3-P3','C4-P4','P3-O1','P4-O2'], spikesFn:(i)=>[120,130,131,400,410,411,700,710,711], magFn:()=>5, noise:0.2, includeInQuiz:true, quizTargetHU:'bursts', quizTargetEN:'bursts', tags:['coma','anesthesia'] })
+  makeCase('normal_alpha',{ titleHU:'Normál éber – occipitalis alfa', titleEN:'Normal awake – occipital alpha', montage:'10–20',
+    descHU:'8–10 Hz occipitalis alfa, reaktív.', descEN:'8–10 Hz occipital alpha, reactive.',
+    explainHU:'8–10 Hz-es, occipitalis túlsúlyú ritmus éber, csukott szemű állapotban. Jellemző a szimmetria (±20%) és a szemnyitásra történő gátlás (blokkolódás). Amplitúdó többnyire 20–100 µV. Aszimmetria, tartós reaktivitáshiány vagy oldal-dominancia mögött szemészeti, occipitalis vagy diffúz kórfolyamat is állhat.',
+    explainEN:'Occipital-predominant 8–10 Hz rhythm in awake, eyes-closed state. Key features: symmetry (±20%), blocking with eye opening, typical amplitude 20–100 µV. Persistent asymmetry or loss of reactivity may suggest occipital pathology or diffuse encephalopathy.',
+    tipsHU:['Szimmetria ellenőrzése','Szemnyitásra gátlódik','Nincs hegyes spike'], tipsEN:['Check symmetry','Blocked by eye opening','No sharp spikes'],
+    diff:'beginner', label:'normal alpha', channels:['O1-O2','P3-O1','P4-O2','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:9, includeInQuiz:false, quizTargetHU:'alfa ritmus', quizTargetEN:'alpha rhythm', tags:['benign','awake'] }),
+
+  makeCase('sleep_spindles',{ titleHU:'N2 – alvási orsók', titleEN:'N2 – sleep spindles', montage:'10–20',
+    descHU:'12–14 Hz orsók centrálisan.', descEN:'12–14 Hz central spindles.',
+    explainHU:'Rövid (0.5–2 s) 12–14 Hz-es „vonatszerű” aktivitás, centrálisan maximális. Gyakran K-komplex előzi meg/kíséri. Nem epileptiform, fiziológiás N2 marker. Időseknél/morbiditásokban frekvencia/amplitúdó változhat.',
+    explainEN:'Brief (0.5–2 s) 12–14 Hz trains with central maximum. Often preceded/accompanied by a K-complex. Physiologic N2 marker; not epileptiform. Frequency/amplitude may vary with age and comorbidity.',
+    tipsHU:['Centrális maximum','Vonatszerű megjelenés','Nincs lassú hullám utána, mint SW-ben'], tipsEN:['Central maximum','Train-like','No paired slow wave as in SW'],
+    diff:'beginner', label:'sleep spindles', channels:['C3-P3','C4-P4','Fz-Cz'], spikesFn:()=>[], magFn:()=>0, baseHz:13, includeInQuiz:false, quizTargetHU:'orsó', quizTargetEN:'spindle', tags:['sleep','benign'] }),
+
+  makeCase('eyeblink',{ titleHU:'Artefaktum – pislogás', titleEN:'Artifact – eye blink', montage:'Frontális',
+    descHU:'Nagy frontális lassú hullám.', descEN:'Large frontal slow deflection.',
+    explainHU:'Sima, széles bázisú frontális deflexió, gyakran kétoldali, polaritásváltással. Meredeksége kisebb, mint az epileptiform tüskéké, és nem követi konzisztens lassú hullám. Gyakran kapcsolódik szemmozgáshoz/EMG-hez.',
+    explainEN:'Smooth, broad-based frontal deflection, often bilateral with polarity change. Less steep than epileptiform spikes and not followed by a consistent slow wave. Frequently associated with eye movement/EMG.',
+    tipsHU:['Frontális túlsúly','Sima lefutás','Nem követi lassú hullám'], tipsEN:['Frontal predominance','Smooth','No spike-slow pairing'],
+    diff:'beginner', label:'eye blink', channels:['Fp1-F3','Fp2-F4','Fz-Cz'], spikesFn:(i)=> (i===0?[150,520]:[]), magFn:(i)=> (i===0?6:2), noise:0.3, includeInQuiz:false, quizTargetHU:'pislogás', quizTargetEN:'blink', tags:['artifact'] }),
+
+  makeCase('gsw3',{ titleHU:'Generalizált tüske-hullám (~3 Hz)', titleEN:'Generalized spike–wave (~3 Hz)', montage:'10–20 ref',
+    descHU:'Szinkron 3 Hz SW.', descEN:'Synchronous 3 Hz SW.',
+    explainHU:'Klasszikus absence mintázat: hegyes tüske + utána lassú hullám, 2.5–3.5 Hz ütemben, több csatornán szinkron. A ciklusok időzítése konzisztens. Artefaktumtól a topográfiai/temporális következetesség különíti el.',
+    explainEN:'Classic absence pattern: sharp spike followed by a slow wave at ~2.5–3.5 Hz, synchronous across channels. Temporal/topographic consistency separates it from artifacts.',
+    tipsHU:['Szinkron több csatornán','Spike után lassú hullám','Artefaktumtól következetesség különíti el'], tipsEN:['Synchronous across channels','Slow wave follows spike','Consistency helps separate artifacts'],
+    diff:'beginner', label:'generalized spike-wave', channels:['Fp1-F3','F3-C3','C3-P3','P3-O1','Fp2-F4','F4-C4','C4-P4','P4-O2'], spikesFn:()=>[160,190,220,250,280,310,340], magFn:(i)=>5-(i%3), includeInQuiz:true, quizTargetHU:'tüske-hullám', quizTargetEN:'spike–wave', tags:['generalized','ictal/interictal'] }),
+
+  makeCase('lt_spikes',{ titleHU:'Bal temporális tüskék', titleEN:'Left temporal spikes', montage:'Bitemporális',
+    descHU:'Fokális T3/T5 max.', descEN:'Focal T3/T5 max.',
+    explainHU:'Keskeny, meredek csúcsú tüskék bal temporálisan, aszinkron több csatornán, gyakran utólag lassú hullám kíséretében. A laterális maximum és a konzisztens morfológia fókuszt jelez.',
+    explainEN:'Narrow, steep spikes over the left temporal region, asynchronous across channels, often followed by a slow wave. Lateralized maximum and consistent morphology indicate a focal generator.',
+    tipsHU:['Ipsilaterális maximum','Meredek fel/le','Gyakran kíséri lassú hullám'], tipsEN:['Ipsilateral max','Steep up/down','Often followed by slow'],
+    diff:'intermediate', label:'left temporal spikes', channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'], spikesFn:(i)=> (i<3?[200,410,640]:[205,415,645]), magFn:(i)=> (i<3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
+
+  makeCase('rt_spikes',{ titleHU:'Jobb temporális tüskék', titleEN:'Right temporal spikes', montage:'Bitemporális',
+    descHU:'Fokális T4/T6 max.', descEN:'Focal T4/T6 max.',
+    explainHU:'Időben szórtan jelentkező tüskék jobb dominanciával. A meredek fel- és lefutás, valamint a visszatérő topográfia epileptiformitás mellett szól.',
+    explainEN:'Temporally scattered spikes with right-sided predominance. Steep rise/fall and recurring topography support epileptiform nature.',
+    tipsHU:['Ipsilaterális max','Keskeny csúcs','Topográfia segít'], tipsEN:['Ipsilateral max','Narrow peak','Use topography'],
+    diff:'intermediate', label:'right temporal spikes', channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'], spikesFn:(i)=> (i>=3?[220,430,660]:[225,435,665]), magFn:(i)=> (i>=3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
+
+  makeCase('lpds',{ titleHU:'LPDs – jobb', titleEN:'LPDs – right', montage:'Referenciális',
+    descHU:'Periodikus jobb oldali kisülések.', descEN:'Periodic right-sided discharges.',
+    explainHU:'Az „ictal–interictal continuum” része. Laterális, szabályos 1–2 s periódusú kisülések, jellegzetes morfológiával. A klinikum (tudatszint, motoros jelek) és a fejlődési tendencia (gyakoriság, evolúció) segít a státusz döntésében.',
+    explainEN:'Part of the ictal–interictal continuum. Lateralized discharges with ~1–2 s periodicity and stereotyped morphology. Clinical correlation and temporal evolution (frequency/morphologic change) are key for NCSE decisions.',
+    tipsHU:['1–2 s periódus','Laterális dominancia','Klinikai korrelátum fontos'], tipsEN:['1–2 s period','Lateralized','Clinical correlation'],
+    diff:'hard', label:'lpds', channels:['F8-T4','T4-T6','T6-O2','F7-T3','T3-T5'], spikesFn:(i)=> (i<3?[150,300,450,600,750]:[]), magFn:(i)=> (i<3?4:1), includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','focal'] }),
+
+  makeCase('gpeds',{ titleHU:'GPDs – generalizált periodikus', titleEN:'GPDs – generalized periodic', montage:'Referenciális',
+    descHU:'Generalizált periodicitás.', descEN:'Generalized periodicity.',
+    explainHU:'Szélesen eloszló, szabályos ritmusú komplexek, gyakran metabolikus/anoxiás hátérrel. Nem szükségképp ictális; a klinikum és a reaktivitás (stimulusra) segít. Ritkábban „plusz” gyors komponens (GPD+F) ictalitás felé tol.',
+    explainEN:'Diffuse, regular periodic complexes, often in metabolic/post-anoxic contexts. Not necessarily ictal; clinical context and stimulus reactivity matter. A fast component (GPD+F) may shift toward ictality.',
+    tipsHU:['Széleskörű','Periodikus','Klinikum dönt'], tipsEN:['Diffuse','Periodic','Clinical context'],
+    diff:'hard', label:'gpds', channels:['F3-C3','C3-P3','F4-C4','C4-P4','P3-O1','P4-O2'], spikesFn:(i)=>[200,400,600,800], magFn:(i)=>3, includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','generalized'] }),
+
+  makeCase('triphasic',{ titleHU:'Triphasic hullámok', titleEN:'Triphasic waves', montage:'Referenciális',
+    descHU:'Metabolikus encephalopathia mintázat.', descEN:'Metabolic encephalopathy pattern.',
+    explainHU:'Háromfázisú (negatív–pozitív–negatív) komplexek frontális túlsúllyal és anterior–posterior időbeli késéssel. Nem spike–slow párok, inkább encephalopathiára utalnak (pl. hepaticus).',
+    explainEN:'Three-phase (negative–positive–negative) complexes with frontal predominance and anterior–posterior time lag. Non-epileptiform; typical for metabolic encephalopathy (e.g., hepatic).',
+    tipsHU:['Frontális túlsúly','Három fázis','Nem spike–slow'], tipsEN:['Frontal pred.','Three phases','Not spike–slow'],
+    diff:'hard', label:'triphasic waves', channels:['Fp1-F3','F3-C3','Fz-Cz','Fp2-F4','F4-C4'], spikesFn:()=>[140,300,470,640], magFn:()=>2, includeInQuiz:true, quizTargetHU:'triphasicus komplexek', quizTargetEN:'triphasic complexes', tags:['encephalopathy'] }),
+
+  makeCase('burst_supp',{ titleHU:'Burst-suppression', titleEN:'Burst-suppression', montage:'Referenciális',
+    descHU:'Rövid burst + csend.', descEN:'Short bursts with suppression.',
+    explainHU:'Rövid nagyamplitúdójú „burst”-ök hosszú, közel izoelektromos szakaszokkal. Anoxia/anesztézia esetén. A suppressio aránya és hossza prognosztikus; reaktivitás hiánya kedvezőtlen.',
+    explainEN:'High-amplitude bursts alternating with long near-isoelectric periods. Seen post-anoxia or under anesthesia. Suppression ratio/length has prognostic value; absent reactivity is unfavorable.',
+    tipsHU:['Nagyon alacsony alap','Burst szigetek','Hosszú suppressio súlyosabb'], tipsEN:['Very low baseline','Burst islands','Long suppression worse'],
+    diff:'hard', label:'burst-suppression', channels:['C3-P3','C4-P4','P3-O1','P4-O2'], spikesFn:(i)=>[120,130,131,400,410,411,700,710,711], magFn:()=>5, noise:0.2, includeInQuiz:true, quizTargetHU:'bursts', quizTargetEN:'bursts', tags:['coma','anesthesia'] })
 ].map(materialize);
 
 /* ==== Synonyms (kompatibilis normalizálással) ==== */
@@ -278,11 +345,11 @@ const SYN = {
   "sleep spindles":["spindle","orsok","orso","spindles"],
   "eye blink":["blink","eyeblink","pislogas","szemmozgas"]
 };
-// UNICODE-safe normalizer (no \p{Diacritic})
+// UNICODE-safe normalizer
 function normalize(s){
   return s.toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")   // diakritikák eltávolítása – Edge/Chrome safe
+    .replace(/[\u0300-\u036f]/g,"")
     .replace(/[^a-z0-9\s-]/g," ")
     .replace(/\s+/g," ")
     .trim();
@@ -325,7 +392,7 @@ function syncTexts(){
   byId('snapshotQuiz').textContent = tK('nextSnap');
   byId('showSolution').textContent = tK('solution')+' + XP';
   byId('scoreHdr').textContent = tK('score');
-  byId('hitLbl').childNodes[0].textContent = tK('hits') + ': ';
+  byId('hitsLblTxt').textContent = tK('hits');
   byId('totalLbl').textContent = tK('total');
   byId('bestLbl').textContent = tK('best');
   byId('medalHdr').textContent = tK('medals');
@@ -337,7 +404,7 @@ function syncTexts(){
   syncMeta(); syncTask(); refreshMeta();
 }
 function syncMeta(){
-  byId('meta').textContent = tK('caseMeta')(current.montage, LANG==='HU'?mapDiff(current.diff):mapDiff(current.diff), (LANG==='HU'?current.titleHU:current.titleEN));
+  byId('meta').textContent = tK('caseMeta')(current.montage, mapDiff(current.diff), (LANG==='HU'?current.titleHU:current.titleEN));
   byId('desc').textContent = (LANG==='HU'?current.descHU:current.descEN);
   const tagDiv=byId('tags'); tagDiv.innerHTML = (current.tags||[]).map(x=>`<span class="chip">${x}</span>`).join(' ');
   byId('explain').textContent = (LANG==='HU'?current.explainHU:current.explainEN);
@@ -363,13 +430,17 @@ byId('speed').oninput=(e)=>{ speed=parseFloat(e.target.value); byId('spdLbl').te
 
 /* ==== Identify ==== */
 const difficulty = byId('difficulty');
-function buildDifficulty(){ const opts=[['beginner',tK('beginner')],['intermediate',tK('intermediate')],['hard',tK('hard')],['expert',tK('expert')],['all',tK('all')]]; difficulty.innerHTML=''; opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); }); difficulty.value=diffFilter; }
+function buildDifficulty(){ const opts=[["beginner",tK('beginner')],["intermediate",tK('intermediate')],["hard",tK('hard')],["expert",tK('expert')],["all",tK('all')]]; difficulty.innerHTML=''; opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); }); difficulty.value=diffFilter; }
 const idfMeta = byId('idfMeta'); const guess = byId('guess'); const fb = byId('fb');
 difficulty.onchange=()=>{ diffFilter = difficulty.value; };
 byId('newIdentify').onclick=()=>idRandomCase(); byId('freezeIdentify').onclick=()=>{ idFreeze=!idFreeze; if(!idFreeze) idOff=0; };
 byId('hintBtn').onclick=()=>{ const initials = idCurrent.label.split(' ').map(w=>w[0].toUpperCase()).join(''); fb.classList.remove('hidden','no'); fb.classList.add('ok'); fb.textContent = tK('hintText') + initials; };
 byId('check').onclick=handleIdentify;
-function filteredCases(){ if(diffFilter==='all') return CASES; return CASES.filter(c=>c.diff===diffFilter || (diffFilter==='expert' && c.diff==='expert')); }
+function filteredCases(){
+  if(diffFilter==='all') return CASES;
+  if(diffFilter==='expert') return CASES.filter(c=>c.diff==='expert'||c.diff==='hard'); // expert ~ hard fallback
+  return CASES.filter(c=>c.diff===diffFilter);
+}
 function idRandomCase(){ const arr=filteredCases(); idCurrent = arr[Math.floor(Math.random()*arr.length)]; idfMeta.textContent = tK('idfMeta')(mapDiff(idCurrent.diff), idCurrent.montage); guess.value=''; fb.className='kudos hidden'; fb.textContent=''; }
 idRandomCase();
 function handleIdentify(){ const g = guess.value.trim(); if(!g) return; const ok = isSynonym(g, idCurrent.label); fb.classList.remove('hidden'); fb.classList.add(ok?'ok':'no'); fb.textContent = ok ? tK('correct') : (tK('wrong') + idCurrent.label); awardXP(ok?20:2); if(ok){ STREAK++; setTimeout(()=>{ idRandomCase(); refreshMeta(); }, 900); } else { STREAK=0; refreshMeta(); } saveProgress(); }
@@ -388,7 +459,7 @@ function quizHits(off=0){ const dx=60*devicePixelRatio, xScale=(byId('eeg3').wid
 function quizPct(){ const t=quizTotal(); const h=quizHits(qOff); return t?Math.round(h/t*100):0; }
 function syncQuizMeta(){ byId('total').textContent=String(quizTotal()); byId('hits').textContent=String(quizHits(qOff)); const p=quizPct(); byId('pct').textContent=p+'%'; byId('bar').style.width=p+'%'; }
 
-/* ==== Lessons (minták; 3 szintből pár darab, bővíthető) ==== */
+/* ==== Lessons (több minta) ==== */
 const LESSONS = (()=> {
   function mk(level,arr){ return arr.map(([id,hu,en,steps,q])=>({id, level, titleHU:hu, titleEN:en, steps:steps.map(([huS,enS])=>({htmlHU:huS, htmlEN:enS})), quiz:{ qHU:q.qHU, qEN:q.qEN, choices:q.choices.map(([huC,enC,ok,xp])=>({hu:huC,en:enC,ok,xp})) } })); }
   const B = [
@@ -402,7 +473,15 @@ const LESSONS = (()=> {
     ], {qHU:'Mi EMG?', qEN:'Which is EMG?', choices:[['Szélessávú zaj','Broadband noise',true,6],['3 Hz SW párok','3 Hz SW pairs',false,0]]}],
     ['alpha_basics','Normál alfa','Normal alpha',[
       ['8–10 Hz occipitalis, reaktív.','8–10 Hz occipital, reactive.']
-    ], {qHU:'Mi normális?', qEN:'Which is normal?', choices:[['Reaktív alfa','Reactive alpha',true,5],['Generalizált SW','Generalized SW',false,0],['Szimmetria','Symmetry',true,5]]}]
+    ], {qHU:'Mi normális?', qEN:'Which is normal?', choices:[['Reaktív alfa','Reactive alpha',true,5],['Generalizált SW','Generalized SW',false,0],['Szimmetria','Symmetry',true,5]]}],
+    ['gsw_intro','3 Hz SW bevezető','Intro to 3 Hz SW',[
+      ['Spike + lassú hullám, 2.5–3.5 Hz.','Spike + slow wave at 2.5–3.5 Hz.'],
+      ['Szimmetrikus, generalizált.','Symmetric and generalized.']
+    ], {qHU:'Mi NEM jellemző?', qEN:'NOT typical?', choices:[['Frontális lokális maximum','Focal frontal maximum',true,5],['Lassú hullám a spike után','Slow wave after spike',false,0]]}],
+    ['sleep_spindles_more','Orsók részletesen','Spindles in detail',[
+      ['Centrális maximum, 12–14 Hz.','Central max, 12–14 Hz.'],
+      ['K-komplex társulhat.','Often with K-complex.']
+    ], {qHU:'Orsók frekvenciája?', qEN:'Spindle frequency?', choices:[['12–14 Hz','12–14 Hz',true,5],['3 Hz','3 Hz',false,0]]}]
   ];
   const I = [
     ['temporal_spikes','Temporális tüskék','Temporal spikes',[
@@ -410,26 +489,40 @@ const LESSONS = (()=> {
     ], {qHU:'Mi utal epileptiformitásra?', qEN:'Suggests epileptiform?', choices:[['Meredek csúcs','Steep peak',true,6],['Sima domborulat','Smooth hump',false,0],['Lassú hullám kíséri','Associated slow',true,6]]}],
     ['firda_oirda','FIRDA vs OIRDA','FIRDA vs OIRDA',[
       ['FIRDA: frontális; OIRDA: occipitalis.','FIRDA: frontal; OIRDA: occipital.']
-    ], {qHU:'Párosítsd!', qEN:'Match!', choices:[['FIRDA→frontális','FIRDA→frontal',true,6],['OIRDA→occipitalis','OIRDA→occipital',true,6],['OIRDA→frontális','OIRDA→frontal',false,0]]}]
+    ], {qHU:'Párosítsd!', qEN:'Match!', choices:[['FIRDA→frontális','FIRDA→frontal',true,6],['OIRDA→occipitalis','OIRDA→occipital',true,6],['OIRDA→frontális','OIRDA→frontal',false,0]]}],
+    ['triphasic_deep','Triphasicus komplexek','Triphasic complexes',[
+      ['Anterior–posterior késés jellemző.','Anterior–posterior time lag.'],
+      ['Metabolikus háttér gyakori.','Often metabolic background.']
+    ], {qHU:'Mi NEM igaz?', qEN:'Which is FALSE?', choices:[['Epileptiform spike–slow párok','Epileptiform spike–slow pairs',true,6],['Frontális túlsúly','Frontal predominance',false,0]]}]
   ];
   const E = [
-    ['burst_supp','Burst-supp értelmezés','Burst-supp interpretation',[
+    ['burst_sup_int','Burst-supp értelmezés','Burst-supp interpretation',[
       ['Suppressio hossza és aránya fontos.','Suppression length and ratio matter.']
-    ], {qHU:'Mi súlyosabb?', qEN:'More severe?', choices:[['Hosszú suppressio','Long suppression',true,8],['Magas alfa arány','High alpha ratio',false,0]]}]
+    ], {qHU:'Mi súlyosabb?', qEN:'More severe?', choices:[['Hosszú suppressio','Long suppression',true,8],['Magas alfa arány','High alpha ratio',false,0]]}],
+    ['iic_spectrum','IIC spektrum','Ictal–interictal continuum',[
+      ['LPDs, GPDs, GPD+F mint elemek.','LPDs, GPDs, GPD+F as elements.'],
+      ['Evolúció/klinikum dönt.','Evolution/clinical context decide.']
+    ], {qHU:'Mi billenti ictus felé?', qEN:'What favors ictus?', choices:[['Frekvencia gyorsul','Frequency accelerates',true,8],['Reakció stimulusra nő','Reactivity increases',false,0]]}]
   ];
   return [...mk('beginner',B), ...mk('intermediate',I), ...mk('expert',E)];
 })();
 const lessonLevelSel = byId('lessonLevel'); const lessonSel = byId('lessonSel');
-function refreshLessons(){
-  const levels = [['beginner',tK('lessonsBeginner')],['intermediate',tK('lessonsIntermediate')],['expert',tK('lessonsExpert')],['all',tK('all')]];
+function buildLessonLevels(){
+  const levels = [["beginner",tK('lessonsBeginner')],["intermediate",tK('lessonsIntermediate')],["expert",tK('lessonsExpert')],["all",tK('all')]];
+  const prev = lessonLevelSel.value || 'beginner';
   lessonLevelSel.innerHTML=''; levels.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; lessonLevelSel.appendChild(o); });
-  const lvl = lessonLevelSel.value||'beginner';
+  lessonLevelSel.value = prev;
+}
+function refreshLessons(){
+  const lvl = lessonLevelSel.value || 'beginner';
   const list = LESSONS.filter(L=> lvl==='all' || L.level===lvl);
   lessonSel.innerHTML=''; list.forEach(L=>{ const o=document.createElement('option'); o.value=L.id; o.textContent=(LANG==='HU'?L.titleHU:L.titleEN); lessonSel.appendChild(o); });
+  if(lessonSel.options.length>0) lessonSel.value = lessonSel.options[0].value;
 }
-lessonLevelSel.onchange=refreshLessons;
+lessonLevelSel.onchange=()=>{ refreshLessons(); };
 function renderLesson(id){
   const L = LESSONS.find(x=>x.id===id); const body=byId('lessonBody'); body.innerHTML='';
+  if(!L) return;
   L.steps.forEach(step=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML = (LANG==='HU'?step.htmlHU:step.htmlEN); body.appendChild(card); });
   const q=byId('lessonQuiz'); q.classList.remove('hidden');
   byId('lqQ').textContent = (LANG==='HU'?L.quiz.qHU:L.quiz.qEN);
@@ -509,7 +602,7 @@ function drawQuiz(){
     ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
     if(qShowAnswer){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{ const pos=rotatedIndex(sx,off,qCurrent.sampleRate); const x=pos*(canvas.width/qCurrent.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio); ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); }
   });
-  // Jelölések nagyobbra véve (könnyebb találni)
+  // Jelölések
   ctx.strokeStyle='#60a5fa'; ctx.lineWidth=3; marks.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,18*devicePixelRatio,0,Math.PI*2); ctx.stroke(); });
   const pct=quizPct(); const hits=quizHits(off); byId('hits').textContent=String(hits); byId('pct').textContent=pct+'%'; byId('bar').style.width=pct+'%';
 }
@@ -536,9 +629,9 @@ document.addEventListener('keydown',(e)=>{
 
 /* ==== Init ==== */
 function init(){
-  refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons();
+  refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); buildLessonLevels(); refreshLessons();
   syncTexts(); setTab('explore');
-  // basic self-tests (hibát a konzolba írjuk, nem fagyunk le)
+  // basic self-tests (log only)
   try {
     console.assert(typeof quizTotal()==='number', 'quizTotal should return number');
     console.assert(document.getElementById('lessonSel'), 'lessonSel missing');
