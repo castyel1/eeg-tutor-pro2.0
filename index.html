@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>EEG Tutor – Pro v1.7 (Canvas Dev)</title>
+<title>EEG Tutor – Pro v1.7.2 (Single-file)</title>
 <style>
   :root{ --bg:#0f1115; --card:#151923; --muted:#9aa3b2; --text:#e8ecf1; --accent:#6ee7ff; --accent2:#a78bfa; --good:#22c55e; --bad:#ef4444; }
-  *{box-sizing:border-box} body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text);} 
+  *{box-sizing:border-box}
+  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text);}
   header{padding:14px 16px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg,#121726,#0f1115)}
   h1{font-size:18px; margin:0; font-weight:700; letter-spacing:.3px}
   .badge{font-size:11px; color:#cbd5e1; border:1px solid #334155; padding:2px 8px; border-radius:999px; margin-left:8px}
@@ -43,7 +44,7 @@
 <header>
   <div class="row">
     <h1>EEG Tutor</h1>
-    <span class="badge">Pro v1.7 • Canvas Dev</span>
+    <span class="badge">Pro v1.7.2 • Single-file</span>
   </div>
   <div class="row">
     <span class="pill lang" id="langBtn">HU ▾</span>
@@ -154,54 +155,56 @@
 </div>
 
 <script>
-/* ==== i18n (HU/EN) ==== */
+/* ==================== i18n (HU/EN) ==================== */
 const I18N = {
-  HU: {
-    explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
-    solution:"Megoldás", on:"be", off:"ki", pause:"Pause", play:"Play",
-    speed:"Sebesség", details:"Részletes magyarázat", tips:"Tippek",
-    beginner:"Kezdő", intermediate:"Középhaladó", hard:"Nehéz", expert:"Expert", mixed:"Vegyes", all:"Mind",
-    newTask:"Új feladat →", freeze:"🧊 Fagyasztás", hint:"💡 Tipp",
-    guessPH:"Mi ez a minta? pl. LPDs, generalized spike-wave, triphasic, SIRPIDs…",
-    check:"Ellenőrzés", score:"Pontszám", hits:"Találatok", total:"Összesen",
-    best:"Legjobb", medals:"Medálok", level:"Szint", xp:"XP",
-    nextSnap:"📸 Következő snapshot", reset:"🔄 Reset", start:"Start",
-    footer:"Canvas Dev build. Köv.: EDF/CSV import, JSON export, több hard case, csatornaérzékeny pontozás.", 
-    correct:"+20 XP – Helyes!", wrong:"+2 XP – Nem ez. Megoldás: ",
-    hintText:"Első betűk: ", caseMeta:(m,d,l)=>`Montázs: ${m}  •  Nehézség: ${d}  •  Címke: ${l}`,
-    idfMeta:(d,m)=>`Nehézség: ${d}  •  Montázs: ${m}`,
-    task:(what)=>`Feladat: jelöld be a(z) ${what} előfordulásait! (Freeze + Snapshot ajánlott)` ,
-    noEvents:"Ehhez a kiválasztott esettípushoz nincs címkézett esemény a kvízben. Válassz másikat vagy készíts snapshotot.",
-    levelLbl:"Szint", xpLbl:"XP",
-    miniQuiz:"Mini-quiz", selectAll:"Jelöld meg az összes helyes állítást.", submit:"Beküldés",
-    gained:"Szerzett XP: ", bestPossible:"Max: ", lessonsBeginner:"Kezdő", lessonsIntermediate:"Középhaladó", lessonsExpert:"Expert"
+  HU: { explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
+        solution:"Megoldás", on:"be", off:"ki", pause:"Pause", play:"Play",
+        speed:"Sebesség", details:"Részletes magyarázat", tips:"Tippek",
+        beginner:"Kezdő", intermediate:"Középhaladó", hard:"Nehéz", expert:"Expert", mixed:"Vegyes", all:"Mind",
+        newTask:"Új feladat →", freeze:"🧊 Fagyasztás", hint:"💡 Tipp",
+        guessPH:"Mi ez a minta? pl. LPDs, generalized spike-wave, triphasic, SIRPIDs…",
+        check:"Ellenőrzés", score:"Pontszám", hits:"Találatok", total:"Összesen",
+        best:"Legjobb", medals:"Medálok", level:"Szint", xp:"XP",
+        nextSnap:"📸 Következő snapshot", reset:"🔄 Reset", start:"Start",
+        footer:"Canvas Dev build. Köv.: EDF/CSV import, JSON export, több hard case, csatornaérzékeny pontozás.",
+        correct:"+20 XP – Helyes!", wrong:"+2 XP – Nem ez. Megoldás: ",
+        hintText:"Első betűk: ", caseMeta:(m,d,l)=>`Montázs: ${m}  •  Nehézség: ${d}  •  Címke: ${l}`,
+        idfMeta:(d,m)=>`Nehézség: ${d}  •  Montázs: ${m}`,
+        task:(what)=>`Feladat: jelöld be a(z) ${what} előfordulásait! (Freeze + Snapshot ajánlott)`,
+        noEvents:"Ehhez a kiválasztott esettípushoz nincs címkézett esemény a kvízben. Válassz másikat vagy készíts snapshotot.",
+        levelLbl:"Szint", xpLbl:"XP",
+        miniQuiz:"Mini-quiz", selectAll:"Jelöld meg az összes helyes állítást.", submit:"Beküldés",
+        gained:"Szerzett XP: ", bestPossible:"Max: ",
+        lessonsBeginner:"Kezdő", lessonsIntermediate:"Középhaladó", lessonsExpert:"Expert"
   },
-  EN: {
-    explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
-    solution:"Solution", on:"on", off:"off", pause:"Pause", play:"Play",
-    speed:"Speed", details:"Detailed explanation", tips:"Tips",
-    beginner:"Beginner", intermediate:"Intermediate", hard:"Hard", expert:"Expert", mixed:"Mixed", all:"All",
-    newTask:"New task →", freeze:"🧊 Freeze", hint:"💡 Hint",
-    guessPH:"What is this pattern? e.g., LPDs, generalized spike-wave, triphasic, SIRPIDs…",
-    check:"Check", score:"Score", hits:"Hits", total:"Total",
-    best:"Best", medals:"Medals", level:"Level", xp:"XP",
-    nextSnap:"📸 Next snapshot", reset:"🔄 Reset", start:"Start",
-    footer:"Canvas Dev build. Next: EDF/CSV import, JSON export, more hard cases, channel-aware scoring.", 
-    correct:"+20 XP – Correct!", wrong:"+2 XP – Not this. Solution: ",
-    hintText:"Initials: ", caseMeta:(m,d,l)=>`Montage: ${m}  •  Difficulty: ${d}  •  Label: ${l}`,
-    idfMeta:(d,m)=>`Difficulty: ${d}  •  Montage: ${m}`,
-    task:(what)=>`Task: click all ${what} occurrences! (Freeze + Snapshot recommended)`,
-    noEvents:"This case has no labeled events for the quiz. Pick another or take a snapshot.",
-    levelLbl:"Level", xpLbl:"XP",
-    miniQuiz:"Mini-quiz", selectAll:"Select all correct statements.", submit:"Submit",
-    gained:"XP gained: ", bestPossible:"Max: ", lessonsBeginner:"Beginner", lessonsIntermediate:"Intermediate", lessonsExpert:"Expert"
+  EN: { explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
+        solution:"Solution", on:"on", off:"off", pause:"Pause", play:"Play",
+        speed:"Speed", details:"Detailed explanation", tips:"Tips",
+        beginner:"Beginner", intermediate:"Intermediate", hard:"Hard", expert:"Expert", mixed:"Mixed", all:"All",
+        newTask:"New task →", freeze:"🧊 Freeze", hint:"💡 Hint",
+        guessPH:"What is this pattern? e.g., LPDs, generalized spike-wave, triphasic, SIRPIDs…",
+        check:"Check", score:"Score", hits:"Hits", total:"Total",
+        best:"Best", medals:"Medals", level:"Level", xp:"XP",
+        nextSnap:"📸 Next snapshot", reset:"🔄 Reset", start:"Start",
+        footer:"Canvas Dev build. Next: EDF/CSV import, JSON export, more hard cases, channel-aware scoring.",
+        correct:"+20 XP – Correct!", wrong:"+2 XP – Not this. Solution: ",
+        hintText:"Initials: ", caseMeta:(m,d,l)=>`Montage: ${m}  •  Difficulty: ${d}  •  Label: ${l}`,
+        idfMeta:(d,m)=>`Difficulty: ${d}  •  Montage: ${m}`,
+        task:(what)=>`Task: click all ${what} occurrences! (Freeze + Snapshot recommended)`,
+        noEvents:"This case has no labeled events for the quiz. Pick another or take a snapshot.",
+        levelLbl:"Level", xpLbl:"XP",
+        miniQuiz:"Mini-quiz", selectAll:"Select all correct statements.", submit:"Submit",
+        gained:"XP gained: ", bestPossible:"Max: ",
+        lessonsBeginner:"Beginner", lessonsIntermediate:"Intermediate", lessonsExpert:"Expert"
   }
 };
 let LANG = localStorage.getItem("eeg_lang") || "HU";
 function tK(k){ return I18N[LANG][k] || k; }
-function setLang(L){ LANG=L; localStorage.setItem("eeg_lang",L); syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons(); }
+function setLang(L){ LANG=L; localStorage.setItem("eeg_lang",L);
+  syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons();
+}
 
-/* ==== Simple XP (no profiles) ==== */
+/* ===== Simple XP (profile később) ===== */
 let XP = parseInt(localStorage.getItem('eeg_xp')||'0',10);
 let BEST = parseInt(localStorage.getItem('eeg_best')||'0',10);
 let STREAK = parseInt(localStorage.getItem('eeg_streak')||'0',10);
@@ -209,9 +212,19 @@ function levelFromXP(x){ return Math.floor(x/100)+1; }
 function saveProgress(){ localStorage.setItem('eeg_xp', String(XP)); localStorage.setItem('eeg_best', String(BEST)); localStorage.setItem('eeg_streak', String(STREAK)); }
 function awardXP(n){ XP+=n; saveProgress(); refreshMeta(); }
 function medalsList(){ const m=[]; if(STREAK>=5)m.push('Kombájn – 5 helyes egymás után'); if(BEST>=90)m.push('Sasszem – 90%+'); if(XP>=300)m.push('Maraton – 300 XP'); return m; }
-function refreshMeta(){ byId('xp').textContent=String(XP); byId('lvl').textContent=String(levelFromXP(XP)); byId('lvlLbl').textContent=tK('levelLbl'); byId('xpLbl').textContent=tK('xpLbl'); const medals=byId('medals'); medals.innerHTML=''; const m=medalsList(); if(!m.length){ medals.innerHTML = '<li>'+(LANG==='HU'?'Még nincs – gyűjts kihívásokat!':'No medals yet — keep going!')+'</li>'; } else m.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; medals.appendChild(li); }); byId('best').textContent=String(BEST); }
+function refreshMeta(){
+  byId('xp').textContent=String(XP);
+  byId('lvl').textContent=String(levelFromXP(XP));
+  byId('lvlLbl').textContent=tK('levelLbl');
+  byId('xpLbl').textContent=tK('xpLbl');
+  const medals=byId('medals'); medals.innerHTML='';
+  const m=medalsList();
+  if(!m.length){ medals.innerHTML = '<li>'+(LANG==='HU'?'Még nincs – gyűjts kihívásokat!':'No medals yet — keep going!')+'</li>'; }
+  else m.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; medals.appendChild(li); });
+  byId('best').textContent=String(BEST);
+}
 
-/* ==== Data generation ==== */
+/* ===== Data generation ===== */
 function genChannel(N, noise=0.6, spikes=[], mag=4, baseHz=0){
   const arr=[];
   for(let i=0;i<N;i++){
@@ -227,69 +240,115 @@ function genChannel(N, noise=0.6, spikes=[], mag=4, baseHz=0){
   }
   return arr;
 }
-const S=1000; // ~10 s ablak
+const S=1000;
 function makeCase(id,meta){ return Object.assign({id, sampleRate:S}, meta); }
-function materialize(c){ c.channels = c.channels.map((name,idx)=>{ const spikes = (typeof c.spikesFn==="function")?c.spikesFn(idx):[]; return {name, data:genChannel(S, c.noise||0.45, spikes, c.magFn?c.magFn(idx):4, c.baseHz||0), spikes}; }); return c; }
+function materialize(c){
+  c.channels = c.channels.map((name,idx)=>{
+    const spikes = (typeof c.spikesFn==="function")?c.spikesFn(idx):[];
+    return {name, data:genChannel(S, c.noise||0.45, spikes, c.magFn?c.magFn(idx):4, c.baseHz||0), spikes};
+  });
+  return c;
+}
 
-/* ==== Cases (expanded) ==== */
+/* ===== Cases (válogatás, mind beépítve) ===== */
 const CASES = [
-  /* ... (az összes eseted ide kerül – változatlanul hagyom a listát,
-          mert nem ez okozta a fagyást; a teljes lista a kérdésedben levő kóddal egyezik) ... */
+  // benign / sleep
+  makeCase('normal_alpha',{ titleHU:'Normál éber – occipitalis alfa', titleEN:'Normal awake – occipital alpha',
+    montage:'10–20', descHU:'8–10 Hz occipitalis alfa, reaktív.', descEN:'8–10 Hz occipital alpha, reactive.',
+    explainHU:'Szimmetria, reaktivitás.', explainEN:'Symmetry, reactivity.',
+    tipsHU:['Szimmetria','Reaktivitás','Nincs spike'], tipsEN:['Symmetry','Reactivity','No spikes'],
+    diff:'beginner', label:'normal alpha',
+    channels:['O1-O2','P3-O1','P4-O2','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:9,
+    includeInQuiz:false, quizTargetHU:'alfa ritmus', quizTargetEN:'alpha rhythm', tags:['benign','awake'] }),
+  makeCase('sleep_spindles',{ titleHU:'N2 – alvási orsók', titleEN:'N2 – sleep spindles',
+    montage:'10–20', descHU:'12–14 Hz centrális orsók.', descEN:'12–14 Hz central spindles.',
+    explainHU:'K-komplex kísérheti.', explainEN:'Often with K-complex.',
+    tipsHU:['Centrális max','Vonatszerű'], tipsEN:['Central max','Trains'],
+    diff:'beginner', label:'sleep spindles',
+    channels:['C3-P3','C4-P4','Fz-Cz'], spikesFn:()=>[], magFn:()=>0, baseHz:13,
+    includeInQuiz:false, quizTargetHU:'orsó', quizTargetEN:'spindle', tags:['sleep','benign'] }),
+  makeCase('k_complex',{ titleHU:'K-komplex', titleEN:'K-complex', montage:'Frontocentrális',
+    descHU:'Bifázisos nagy hullám N2-ben.', descEN:'High amplitude biphasic in N2.',
+    explainHU:'Fiziológiás jelenség.', explainEN:'Physiologic.',
+    tipsHU:['Frontocentrális','Magas amp'], tipsEN:['Frontocentral','High amp'],
+    diff:'beginner', label:'k-complex',
+    channels:['F3-C3','F4-C4','Cz-Pz'], spikesFn:(i)=> (i===1?[400]:[]), magFn:(i)=> (i===1?6:2), noise:0.3,
+    includeInQuiz:true, quizTargetHU:'K-komplex', quizTargetEN:'K-complex', tags:['sleep','benign'] }),
+  // artifacts
+  makeCase('eyeblink',{ titleHU:'Artefaktum – pislogás', titleEN:'Artifact – eye blink',
+    montage:'Frontális', descHU:'Nagy frontális lassú hullám.', descEN:'Large frontal slow deflection.',
+    explainHU:'Sima csúcs, polaritás.', explainEN:'Smooth, polarity.',
+    tipsHU:['Frontális túlsúly','Sima'], tipsEN:['Frontal predominance','Smooth'],
+    diff:'beginner', label:'eye blink',
+    channels:['Fp1-F3','Fp2-F4','Fz-Cz'], spikesFn:(i)=> (i===0?[150,520]:[]), magFn:(i)=> (i===0?6:2), noise:0.3,
+    includeInQuiz:false, quizTargetHU:'pislogás', quizTargetEN:'blink', tags:['artifact'] }),
+  // interictal/ictal spectrum
+  makeCase('gsw3',{ titleHU:'Generalizált tüske-hullám (~3 Hz)', titleEN:'Generalized spike–wave (~3 Hz)',
+    montage:'10–20 ref', descHU:'Szinkron 3 Hz SW.', descEN:'Synchronous 3 Hz SW.',
+    explainHU:'Spike + lassú hullám.', explainEN:'Spike + slow wave.',
+    tipsHU:['Szinkron','Párban'], tipsEN:['Synchronous','Paired'],
+    diff:'beginner', label:'generalized spike-wave',
+    channels:['Fp1-F3','F3-C3','C3-P3','P3-O1','Fp2-F4','F4-C4','C4-P4','P4-O2'],
+    spikesFn:()=>[160,190,220,250,280,310,340], magFn:(i)=>5-(i%3),
+    includeInQuiz:true, quizTargetHU:'tüske-hullám', quizTargetEN:'spike–wave', tags:['generalized'] }),
+  makeCase('lt_spikes',{ titleHU:'Bal temporális tüskék', titleEN:'Left temporal spikes',
+    montage:'Bitemporális', descHU:'Fokális T3/T5 max.', descEN:'Focal T3/T5 max.',
+    explainHU:'Aszinkron több csatornán.', explainEN:'Asynchronous across channels.',
+    tipsHU:['Ipsilaterális','Meredek'], tipsEN:['Ipsilateral','Steep'],
+    diff:'intermediate', label:'left temporal spikes',
+    channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'],
+    spikesFn:(i)=> (i<3?[200,410,640]:[205,415,645]), magFn:(i)=> (i<3?5:2),
+    includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
+  makeCase('lpds',{ titleHU:'LPDs – laterális periodikus kisülések (jobb)', titleEN:'LPDs – lateralized periodic discharges (right)',
+    montage:'Referenciális', descHU:'Periodikus jobb oldali.', descEN:'Periodic right-sided.',
+    diff:'hard', label:'lpds',
+    channels:['F8-T4','T4-T6','T6-O2','F7-T3','T3-T5'],
+    spikesFn:(i)=> (i<3?[150,300,450,600,750]:[]), magFn:(i)=> (i<3?4:1),
+    includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','focal'] }),
+  makeCase('triphasic',{ titleHU:'Triphasic hullámok', titleEN:'Triphasic waves',
+    montage:'Referenciális', descHU:'Metabolikus encephalopathia mintázat.', descEN:'Metabolic encephalopathy pattern.',
+    diff:'hard', label:'triphasic waves',
+    channels:['Fp1-F3','F3-C3','Fz-Cz','Fp2-F4','F4-C4'],
+    spikesFn:()=>[140,300,470,640], magFn:()=>2,
+    includeInQuiz:true, quizTargetHU:'triphasicus komplexek', quizTargetEN:'triphasic complexes', tags:['encephalopathy'] })
 ].map(materialize);
 
-/* ==== Synonyms (expanded) ==== */
+/* ===== Synonyms ===== */
 const SYN = {
   "generalized spike-wave":["gsw","3hz","absence","generalizalt tuske hullam","generalized spike wave"],
-  "polyspike-wave":["polyspike","polytuske","psw"],
   "left temporal spikes":["lt","bal temporalis","bal temporális","t3","t5","temp spikes"],
-  "right temporal spikes":["rt","jobb temporalis","jobb temporális","t4","t6","temp spikes"],
-  "triphasic waves":["triphasic","triphasicus","hepatic","metabolic encephalopathy"],
+  "triphasic waves":["triphasic","triphasicus","hepatic"],
   "lpds":["lpd","lpds","pleds","pled","lateralized periodic discharges"],
-  "gpds":["gpd","gpeds","generalized periodic discharges"],
-  "lrda":["lrda"],
-  "grda":["grda"],
-  "sirpids":["sirpids","stimulus induced","stimulus-induced"],
-  "right frontal spikes":["frontal spikes","jobb frontalis","jobb frontális","rf spikes"],
   "normal alpha":["normal","normál","alfa","alpha","normal eeg","normál alfa"],
-  "mu rhythm":["mu","mu rhythm","sensorimotor"],
   "sleep spindles":["spindle","orsó","orsók"],
   "k-complex":["k complex","k-komplex"],
-  "vertex sharp":["vertex","v sharp"],
-  "eye blink":["blink","eyeblink","pislogás","szemmozgás"],
-  "emg":["emg","izomartefaktum","muscle"],
-  "ecg artifact":["ecg","ekg","ekg artifact","ecg artifact"],
-  "burst-suppression":["burst","suppression","bs"],
-  "posts":["posts","positive occipital sharp transients"],
-  "wicket spikes":["wicket","benign wicket"],
-  "gpfa":["gpfa","fast paroxysmal"],
-  "firda":["firda"],
-  "oirda":["oirda"],
-  "sreda-like":["sreda"]
+  "eye blink":["blink","eyeblink","pislogás","szemmozgás"]
 };
-/* --- KOMPATIBILIS diakritika-eltávolítás --- */
 function normalize(s){
-  try{
-    return s.toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g,"")   // <-- működik régi Edge/Chrome alatt is
-            .replace(/[^a-z0-9\s-]/g," ")
-            .replace(/\s+/g," ")
-            .trim();
-  }catch(e){
-    return s.toLowerCase().trim();
-  }
+  return s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"")
+          .replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();
 }
-function isSynonym(guess, canonical){ const g=normalize(guess), c=normalize(canonical); if(g===c) return true; const list = SYN[canonical]||[]; if(list.some(x=>normalize(x)===g)) return true; const toks = g.split(" "); if(toks.some(t=>c.includes(t)&&t.length>=4)) return true; return false; }
+function isSynonym(guess, canonical){
+  const g=normalize(guess), c=normalize(canonical);
+  if(g===c) return true;
+  const list = SYN[canonical]||[];
+  if(list.some(x=>normalize(x)===g)) return true;
+  const toks = g.split(" ");
+  if(toks.some(t=>c.includes(t)&&t.length>=4)) return true;
+  return false;
+}
 
-/* ==== State & helpers ==== */
-let mode='explore', showAns=true, playing=true, speed=1.0; let tExplore=0; let diffFilter='beginner';
-let current=CASES[0], idCurrent=CASES[0], idFreeze=false, idOff=0; let qCurrent=CASES.find(c=>c.includeInQuiz)||CASES[0], qFreeze=false, qShowAnswer=false, qOff=0, marks=[];
+/* ===== State / helpers ===== */
+let mode='explore', showAns=true, playing=true, speed=1.0;
+let tExplore=0; let diffFilter='beginner';
+let current=CASES[0], idCurrent=CASES[0], idFreeze=false, idOff=0;
+let qCurrent=CASES.find(c=>c.includeInQuiz)||CASES[0], qFreeze=false, qShowAnswer=false, qOff=0, marks=[];
 function rotatedIndex(i, off, N){ return ((i-off)%N + N) % N; }
 
-/* ==== DOM ==== */
+/* ===== DOM ===== */
 function byId(x){ return document.getElementById(x); }
 
-/* ==== UI text sync ==== */
+/* ===== UI text sync ===== */
 function syncTexts(){
   byId('tabExplore').textContent = tK('explore');
   byId('tabIdentify').textContent = tK('identify');
@@ -325,83 +384,284 @@ function syncTexts(){
 function syncMeta(){
   byId('meta').textContent = tK('caseMeta')(current.montage, current.diff, current.label);
   byId('desc').textContent = (LANG==='HU'?current.descHU:current.descEN);
-  const tagDiv=byId('tags'); tagDiv.innerHTML = (current.tags||[]).map(x=>`<span class="chip">${x}</span>`).join(' ');
+  byId('tags').innerHTML = (current.tags||[]).map(x=>`<span class="chip">${x}</span>`).join(' ');
   byId('explain').textContent = (LANG==='HU'?current.explainHU:current.explainEN);
-  const tips = (LANG==='HU'?current.tipsHU:current.tipsEN); const ul = byId('tips'); ul.innerHTML=''; tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); });
+  const tips = (LANG==='HU'?current.tipsHU:current.tipsEN);
+  const ul = byId('tips'); ul.innerHTML=''; tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); });
 }
-function syncTask(){ const txt = LANG==='HU' ? qCurrent.quizTargetHU : qCurrent.quizTargetEN; byId('task').textContent = tK('task')(txt||'events'); const has = quizTotal()>0; byId('noEvents').style.display = has?'none':'block'; byId('noEvents').textContent = tK('noEvents'); }
+function syncTask(){
+  const txt = LANG==='HU' ? qCurrent.quizTargetHU : qCurrent.quizTargetEN;
+  byId('task').textContent = tK('task')(txt||'events');
+  const has = quizTotal()>0;
+  byId('noEvents').style.display = has?'none':'block';
+  byId('noEvents').textContent = tK('noEvents');
+}
 
-/* ==== Tabs ==== */
-function setTab(tab){ mode=tab; byId('tabExplore').className = tab==='explore'?'primary':'ghost'; byId('tabIdentify').className = tab==='identify'?'primary':'ghost'; byId('tabQuiz').className = tab==='quiz'?'primary':'ghost'; byId('tabLessons').className = tab==='lessons'?'primary':'ghost'; byId('explore').classList.toggle('hidden', tab!=='explore'); byId('identify').classList.toggle('hidden', tab!=='identify'); byId('quiz').classList.toggle('hidden', tab!=='quiz'); byId('lessons').classList.toggle('hidden', tab!=='lessons'); }
-byId('tabExplore').onclick=()=>setTab('explore'); byId('tabIdentify').onclick=()=>setTab('identify'); byId('tabQuiz').onclick=()=>setTab('quiz'); byId('tabLessons').onclick=()=>setTab('lessons');
+/* ===== Tabs ===== */
+function setTab(tab){
+  mode=tab;
+  byId('tabExplore').className = tab==='explore'?'primary':'ghost';
+  byId('tabIdentify').className = tab==='identify'?'primary':'ghost';
+  byId('tabQuiz').className = tab==='quiz'?'primary':'ghost';
+  byId('tabLessons').className = tab==='lessons'?'primary':'ghost';
+  byId('explore').classList.toggle('hidden', tab!=='explore');
+  byId('identify').classList.toggle('hidden', tab!=='identify');
+  byId('quiz').classList.toggle('hidden', tab!=='quiz');
+  byId('lessons').classList.toggle('hidden', tab!=='lessons');
+}
+byId('tabExplore').onclick=()=>setTab('explore');
+byId('tabIdentify').onclick=()=>setTab('identify');
+byId('tabQuiz').onclick=()=>setTab('quiz');
+byId('tabLessons').onclick=()=>setTab('lessons');
 
-/* ==== Explore ==== */
+/* ===== Explore ===== */
 const caseSel = byId('caseSel');
-function refreshCaseOptions(){ caseSel.innerHTML=''; CASES.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN); caseSel.appendChild(o); }); caseSel.value=current.id; }
+function refreshCaseOptions(){
+  caseSel.innerHTML='';
+  CASES.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN); caseSel.appendChild(o); });
+  caseSel.value=current.id;
+}
 caseSel.onchange=()=>{ current = CASES.find(c=>c.id===caseSel.value); syncMeta(); };
 byId('toggleAns').onclick=()=>{ showAns=!showAns; byId('ansLbl').textContent=showAns?tK('on'):tK('off'); };
 byId('playBtn').onclick=()=>{ playing=!playing; byId('playBtn').textContent= playing?'⏯️ '+tK('pause'):'▶️ '+tK('play'); };
 byId('speed').oninput=(e)=>{ speed=parseFloat(e.target.value); byId('spdLbl').textContent=speed.toFixed(1)+'×'; };
 
-/* ==== Identify ==== */
+/* ===== Identify ===== */
 const difficulty = byId('difficulty');
-function buildDifficulty(){ const opts=[['beginner',tK('beginner')],['intermediate',tK('intermediate')],['hard',tK('hard')],['expert',tK('expert')],['all',tK('all')]]; difficulty.innerHTML=''; opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); }); difficulty.value=diffFilter; }
+function buildDifficulty(){
+  const opts=[['beginner',tK('beginner')],['intermediate',tK('intermediate')],['hard',tK('hard')],['expert',tK('expert')],['all',tK('all')]];
+  difficulty.innerHTML='';
+  opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); });
+  difficulty.value=diffFilter;
+}
 const idfMeta = byId('idfMeta'); const guess = byId('guess'); const fb = byId('fb');
 difficulty.onchange=()=>{ diffFilter = difficulty.value; };
-byId('newIdentify').onclick=()=>idRandomCase(); byId('freezeIdentify').onclick=()=>{ idFreeze=!idFreeze; if(!idFreeze) idOff=0; };
-byId('hintBtn').onclick=()=>{ const initials = idCurrent.label.split(' ').map(w=>w[0].toUpperCase()).join(''); fb.classList.remove('hidden','no'); fb.classList.add('ok'); fb.textContent = tK('hintText') + initials; };
+byId('newIdentify').onclick=()=>idRandomCase();
+byId('freezeIdentify').onclick=()=>{ idFreeze=!idFreeze; if(!idFreeze) idOff=0; };
+byId('hintBtn').onclick=()=>{
+  const initials = idCurrent.label.split(' ').map(w=>w[0].toUpperCase()).join('');
+  fb.classList.remove('hidden','no'); fb.classList.add('ok');
+  fb.textContent = tK('hintText') + initials;
+};
 byId('check').onclick=handleIdentify;
-function filteredCases(){ if(diffFilter==='all') return CASES; return CASES.filter(c=>c.diff===diffFilter || (diffFilter==='expert' && c.diff==='expert')); }
-function idRandomCase(){ const arr=filteredCases(); idCurrent = arr[Math.floor(Math.random()*arr.length)]; idfMeta.textContent = tK('idfMeta')(idCurrent.diff, idCurrent.montage); guess.value=''; fb.className='kudos hidden'; fb.textContent=''; }
+function filteredCases(){
+  if(diffFilter==='all') return CASES;
+  return CASES.filter(c=>c.diff===diffFilter || (diffFilter==='expert' && c.diff==='expert'));
+}
+function idRandomCase(){
+  const arr=filteredCases(); idCurrent = arr[Math.floor(Math.random()*arr.length)];
+  idfMeta.textContent = tK('idfMeta')(idCurrent.diff, idCurrent.montage);
+  guess.value=''; fb.className='kudos hidden'; fb.textContent='';
+}
 idRandomCase();
-function handleIdentify(){ const g = guess.value.trim(); if(!g) return; const ok = isSynonym(g, idCurrent.label); fb.classList.remove('hidden'); fb.classList.add(ok?'ok':'no'); fb.textContent = ok ? tK('correct') : (tK('wrong') + idCurrent.label); awardXP(ok?20:2); if(ok){ STREAK++; setTimeout(()=>{ idRandomCase(); refreshMeta(); }, 900); } else { STREAK=0; refreshMeta(); } saveProgress(); }
+function handleIdentify(){
+  const g = guess.value.trim(); if(!g) return;
+  const ok = isSynonym(g, idCurrent.label);
+  fb.classList.remove('hidden'); fb.classList.add(ok?'ok':'no');
+  fb.textContent = ok ? tK('correct') : (tK('wrong') + idCurrent.label);
+  awardXP(ok?20:2);
+  if(ok){ STREAK++; setTimeout(()=>{ idRandomCase(); refreshMeta(); }, 900); }
+  else { STREAK=0; refreshMeta(); }
+  saveProgress();
+}
 
-/* ==== Quiz + snapshot ==== */
+/* ===== Quiz + snapshot ===== */
 const caseSelQ = byId('caseSelQ');
-function refreshCaseOptionsQ(){ caseSelQ.innerHTML=''; CASES.filter(c=>c.includeInQuiz).forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN); caseSelQ.appendChild(o); }); caseSelQ.value=qCurrent.id; }
+function refreshCaseOptionsQ(){
+  caseSelQ.innerHTML='';
+  CASES.filter(c=>c.includeInQuiz).forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN); caseSelQ.appendChild(o); });
+  caseSelQ.value=qCurrent.id;
+}
 caseSelQ.onchange=()=>{ qCurrent = CASES.find(c=>c.id===caseSelQ.value); marks=[]; qShowAnswer=false; qOff=0; syncQuizMeta(); syncTask(); };
 byId('resetQuiz').onclick=()=>{ marks=[]; qShowAnswer=false; qOff=0; syncQuizMeta(); };
 byId('freezeQuiz').onclick=()=>{ qFreeze=!qFreeze; if(!qFreeze){ qOff=0; } };
 byId('snapshotQuiz').onclick=()=>{ qFreeze=true; qOff = Math.floor(Math.random()* (qCurrent.sampleRate-1) ); syncQuizMeta(); };
 byId('showSolution').onclick=()=>{ qShowAnswer=true; const pct=quizPct(); awardXP( pct>=80 ? 40 : 15 ); BEST = Math.max(BEST, pct); saveProgress(); refreshMeta(); };
-byId('eeg3').addEventListener('click',(e)=>{ if(mode!=='quiz') return; const r=e.target.getBoundingClientRect(); const x=(e.clientX-r.left)*devicePixelRatio; const y=(e.clientY-r.top)*devicePixelRatio; marks.push({x,y}); syncQuizMeta(); });
+byId('eeg3').addEventListener('click',(e)=>{ if(mode!=='quiz') return;
+  const r=e.target.getBoundingClientRect(); const x=(e.clientX-r.left)*devicePixelRatio; const y=(e.clientY-r.top)*devicePixelRatio;
+  marks.push({x,y}); syncQuizMeta();
+});
 function quizTotal(){ return qCurrent.channels.reduce((a,ch)=>a+(ch.spikes?.length||0),0); }
-function quizHits(off=0){ const dx=40*devicePixelRatio, xScale=(byId('eeg3').width / qCurrent.sampleRate); let correct=0; qCurrent.channels.forEach(ch=> ch.spikes.forEach(sx=>{ const pos = rotatedIndex(sx, off, qCurrent.sampleRate); const sxpx = pos*xScale; if(marks.some(m=>Math.abs(m.x-sxpx)<dx)) correct++; })); return correct; }
+function quizHits(off=0){
+  const dx=40*devicePixelRatio, xScale=(byId('eeg3').width / qCurrent.sampleRate);
+  let correct=0;
+  qCurrent.channels.forEach(ch=> ch.spikes.forEach(sx=>{
+    const pos = rotatedIndex(sx, off, qCurrent.sampleRate);
+    const sxpx = pos*xScale;
+    if(marks.some(m=>Math.abs(m.x-sxpx)<dx)) correct++;
+  }));
+  return correct;
+}
 function quizPct(){ const t=quizTotal(); const h=quizHits(qOff); return t?Math.round(h/t*100):0; }
-function syncQuizMeta(){ byId('total').textContent=String(quizTotal()); byId('hits').textContent=String(quizHits(qOff)); const p=quizPct(); byId('pct').textContent=p+'%'; byId('bar').style.width=p+'%'; }
+function syncQuizMeta(){
+  byId('total').textContent=String(quizTotal());
+  byId('hits').textContent=String(quizHits(qOff));
+  const p=quizPct(); byId('pct').textContent=p+'%'; byId('bar').style.width=p+'%';
+}
 
-/* ==== Lessons (>=10 per level, multi-answer XP) ==== */
-/*  A Te kódod szerinti LESSONS blokk ide jön – meghagytam változatlanul.  */
-
-const LESSONS = (()=>{/* ... a Te listád ... */})();
+/* ===== Lessons (mini-quiz több válaszlehetőséggel) ===== */
+const LESSONS = (()=> {
+  const B = [
+    ['artifact_vs_spike','Artefaktum vs. spike','Artifact vs spike',[
+      ['Artefaktum: szemmozgás/pislogás frontális dominanciával, nem hegyes.','Artifact: eye blink frontal predominance, not sharp.'],
+      ['Spike: meredek fel/le, gyakran lassú hullám követi.','Spike: steep up/down, often followed by slow wave.']
+    ], {qHU:'Melyik tipikus EMG-re?', qEN:'Which is typical for EMG?', choices:[['Szélessávú zaj','Broadband noise',true,5],['3 Hz SW párok','3 Hz SW pairs',false,0],['Triphasic hullámok','Triphasic waves',false,0]]}],
+    ['sleep_basics','Alvás alapok','Sleep basics',[
+      ['N1: vertex élesek megjelenhetnek.','N1: vertex sharps may appear.'],
+      ['N2: orsók + K-komplex.','N2: spindles + K-complex.']
+    ], {qHU:'Melyik N2-re jellemző?', qEN:'Characteristic of N2?', choices:[['K-komplex','K-complex',true,6],['Mu-ritmus','Mu rhythm',false,0],['Orsók','Spindles',true,6]]}],
+    ['gsw_basics','3 Hz SW alapok','3 Hz SW basics',[
+      ['Spike + lassú hullám 2.5–3.5 Hz.','Spike + slow wave 2.5–3.5 Hz.']
+    ], {qHU:'Jelöld a helyes állításokat!','qEN':'Mark correct statements!', choices:[['Generalizált és szinkron','Generalized and synchronous',true,6],['Artefaktum','Artifact',false,0],['Kísérhet absence','May underlie absence',true,6]]}]
+  ];
+  function mk(level,arr){ return arr.map(([id,hu,en,steps,q])=>({id, level, titleHU:hu, titleEN:en, steps:steps.map(([huS,enS])=>({htmlHU:huS, htmlEN:enS})), quiz:{ qHU:q.qHU||q.qHU, qEN:q.qEN||q.qEN, choices:q.choices.map(([huC,enC,ok,xp])=>({hu:huC,en:enC,ok,xp})) } })); }
+  return [...mk('beginner',B)];
+})();
 const lessonLevelSel = byId('lessonLevel'); const lessonSel = byId('lessonSel');
 function refreshLessons(){
-  const levels = [['beginner',tK('lessonsBeginner')],['intermediate',tK('lessonsIntermediate')],['expert',tK('lessonsExpert')],['all',tK('all')]];
+  const levels = [['beginner',tK('lessonsBeginner')],['all',tK('all')]];
   lessonLevelSel.innerHTML=''; levels.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; lessonLevelSel.appendChild(o); });
   const lvl = lessonLevelSel.value||'beginner';
   const list = LESSONS.filter(L=> lvl==='all' || L.level===lvl);
   lessonSel.innerHTML=''; list.forEach(L=>{ const o=document.createElement('option'); o.value=L.id; o.textContent=(LANG==='HU'?L.titleHU:L.titleEN); lessonSel.appendChild(o); });
 }
 lessonLevelSel.onchange=refreshLessons;
-function renderLesson(id){ const L = LESSONS.find(x=>x.id===id); const body=byId('lessonBody'); body.innerHTML=''; L.steps.forEach(step=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML = (LANG==='HU'?step.htmlHU:step.htmlEN); body.appendChild(card); }); const q=byId('lessonQuiz'); q.classList.remove('hidden'); byId('lqQ').textContent = (LANG==='HU'?L.quiz.qHU:L.quiz.qEN); const choices=byId('lqChoices'); choices.innerHTML=''; L.quiz.choices.forEach((c,i)=>{ const id=`lq_${L.id}_${i}`; const wrap=document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px'; const cb=document.createElement('input'); cb.type='checkbox'; cb.id=id; const txt=document.createElement('span'); txt.textContent=(LANG==='HU'?c.hu:c.en); wrap.appendChild(cb); wrap.appendChild(txt); choices.appendChild(wrap); }); byId('lqSubmit').onclick=()=>{ let gained=0, best=0; L.quiz.choices.forEach((c,i)=>{ best+= (c.ok?c.xp:0); const cb=choices.querySelectorAll('input')[i]; if(cb.checked && c.ok) gained+=c.xp; }); const fb=byId('lqFb'); fb.classList.remove('hidden'); fb.classList.add('ok'); fb.textContent = (LANG==='HU'?tK('gained'):tK('gained')) + gained + ' • ' + tK('bestPossible') + best; if(gained>0) awardXP(gained); }; }
+function renderLesson(id){
+  const L = LESSONS.find(x=>x.id===id);
+  const body=byId('lessonBody'); body.innerHTML='';
+  L.steps.forEach(step=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML = (LANG==='HU'?step.htmlHU:step.htmlEN); body.appendChild(card); });
+  const q=byId('lessonQuiz'); q.classList.remove('hidden');
+  byId('lqQ').textContent = (LANG==='HU'?L.quiz.qHU:L.quiz.qEN);
+  const choices=byId('lqChoices'); choices.innerHTML='';
+  L.quiz.choices.forEach((c,i)=>{
+    const wrap=document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
+    const cb=document.createElement('input'); cb.type='checkbox';
+    const txt=document.createElement('span'); txt.textContent=(LANG==='HU'?c.hu:c.en);
+    wrap.appendChild(cb); wrap.appendChild(txt); choices.appendChild(wrap);
+  });
+  byId('lqSubmit').onclick=()=>{
+    let gained=0,best=0; L.quiz.choices.forEach((c,i)=>{ best+= (c.ok?c.xp:0); const cb=choices.querySelectorAll('input')[i]; if(cb.checked && c.ok) gained+=c.xp; });
+    const fb=byId('lqFb'); fb.classList.remove('hidden'); fb.classList.add('ok');
+    fb.textContent = tK('gained') + gained + ' • ' + tK('bestPossible') + best;
+    if(gained>0) awardXP(gained);
+  };
+}
 byId('startLesson').onclick=()=> renderLesson(lessonSel.value);
 
-/* ==== Drawing ==== */
+/* ===== Drawing ===== */
 function fitCanvas(c){ const w=c.clientWidth*devicePixelRatio, h=c.clientHeight*devicePixelRatio; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } }
 function toXY(c, i, yVal, idx, chCount, sampleRate){ const xScale = c.width / sampleRate; const chGap=(c.height-40)/chCount; const yBase=20+idx*chGap+chGap/2; const yScale=12*devicePixelRatio; return {x:i*xScale, y:yBase - yVal*yScale, yBase, chGap}; }
-function drawExplore(){ const canvas=byId('eeg'); fitCanvas(canvas); if(playing){ tExplore = (tExplore + 0.06*speed) % current.sampleRate; } const off=Math.floor(tExplore); const ctx=canvas.getContext('2d'); ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#142038'; ctx.lineWidth=1; for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); } for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(x=canvas.width,y); ctx.stroke(); } ctx.lineWidth=2; current.channels.forEach((ch,idx)=>{ const rotated = ch.data.slice(off).concat(ch.data.slice(0,off)); ctx.strokeStyle='#dbe5ff'; ctx.beginPath(); rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,current.channels.length,current.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke(); const p0=toXY(canvas,0,0,idx,current.channels.length,current.sampleRate); ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio); if(showAns){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{ const pos=rotatedIndex(sx,off,current.sampleRate); const x=pos*(canvas.width/current.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio); ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); } }); requestAnimationFrame(drawExplore); }
+function drawExplore(){
+  const canvas=byId('eeg'); fitCanvas(canvas);
+  if(playing){ tExplore = (tExplore + 0.06*speed) % current.sampleRate; }
+  const off=Math.floor(tExplore); const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#142038'; ctx.lineWidth=1;
+  for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+  ctx.lineWidth=2;
+  current.channels.forEach((ch,idx)=>{
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
+    ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
+    rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,current.channels.length,current.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+    ctx.stroke();
+    const p0=toXY(canvas,0,0,idx,current.channels.length,current.sampleRate);
+    ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui';
+    ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
+    if(showAns){
+      ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3;
+      ch.spikes.forEach(sx=>{
+        const pos=rotatedIndex(sx,off,current.sampleRate);
+        const x=pos*(canvas.width/current.sampleRate);
+        const y=p0.yBase - rotated[pos]*(12*devicePixelRatio);
+        ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke();
+      });
+    }
+  });
+  requestAnimationFrame(drawExplore);
+}
 requestAnimationFrame(drawExplore);
-function drawIdentify(){ const canvas=byId('eeg2'); fitCanvas(canvas); const ctx=canvas.getContext('2d'); if(!idFreeze){ idOff=Math.floor((performance.now()*0.06*speed)%idCurrent.sampleRate); } const off=idOff; ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#142038'; ctx.lineWidth=1; for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); } for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(x=canvas.width,y); ctx.stroke(); } ctx.lineWidth=2; idCurrent.channels.forEach((ch,idx)=>{ const rotated = ch.data.slice(off).concat(ch.data.slice(0,off)); ctx.strokeStyle='#dbe5ff'; ctx.beginPath(); rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,idCurrent.channels.length,idCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke(); const p0=toXY(canvas,0,0,idx,idCurrent.channels.length,idCurrent.sampleRate); ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio); }); requestAnimationFrame(drawIdentify); }
+
+function drawIdentify(){
+  const canvas=byId('eeg2'); fitCanvas(canvas); const ctx=canvas.getContext('2d');
+  if(!idFreeze){ idOff=Math.floor((performance.now()*0.06*speed)%idCurrent.sampleRate); }
+  const off=idOff;
+  ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#142038'; ctx.lineWidth=1;
+  for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+  ctx.lineWidth=2;
+  idCurrent.channels.forEach((ch,idx)=>{
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
+    ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
+    rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,idCurrent.channels.length,idCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+    ctx.stroke();
+    const p0=toXY(canvas,0,0,idx,idCurrent.channels.length,idCurrent.sampleRate);
+    ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui';
+    ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
+  });
+  requestAnimationFrame(drawIdentify);
+}
 requestAnimationFrame(drawIdentify);
-function drawQuiz(){ const canvas=byId('eeg3'); fitCanvas(canvas); const ctx=canvas.getContext('2d'); if(!qFreeze){ qOff=Math.floor((performance.now()*0.06*speed)%qCurrent.sampleRate); } const off=qOff; ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#142038'; ctx.lineWidth=1; for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); } for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(x=canvas.width,y); ctx.stroke(); } ctx.lineWidth=2; qCurrent.channels.forEach((ch,idx)=>{ const rotated = ch.data.slice(off).concat(ch.data.slice(0,off)); ctx.strokeStyle='#dbe5ff'; ctx.beginPath(); rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,qCurrent.channels.length,qCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke(); const p0=toXY(canvas,0,0,idx,qCurrent.channels.length,qCurrent.sampleRate); ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio); if(qShowAnswer){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{ const pos=rotatedIndex(sx,off,qCurrent.sampleRate); const x=pos*(canvas.width/qCurrent.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio); ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); } }); ctx.strokeStyle='#60a5fa'; ctx.lineWidth=3; marks.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,12*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); const pct=quizPct(); const hits=quizHits(off); byId('hits').textContent=String(hits); byId('pct').textContent=pct+'%'; byId('bar').style.width=pct+'%'; requestAnimationFrame(drawQuiz); }
+
+function drawQuiz(){
+  const canvas=byId('eeg3'); fitCanvas(canvas); const ctx=canvas.getContext('2d');
+  if(!qFreeze){ qOff=Math.floor((performance.now()*0.06*speed)%qCurrent.sampleRate); }
+  const off=qOff;
+  ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#142038'; ctx.lineWidth=1;
+  for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+  ctx.lineWidth=2;
+  qCurrent.channels.forEach((ch,idx)=>{
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
+    ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
+    rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,qCurrent.channels.length,qCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+    ctx.stroke();
+    const p0=toXY(canvas,0,0,idx,qCurrent.channels.length,qCurrent.sampleRate);
+    ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui';
+    ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
+    if(qShowAnswer){
+      ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3;
+      ch.spikes.forEach(sx=>{
+        const pos=rotatedIndex(sx,off,qCurrent.sampleRate);
+        const x=pos*(canvas.width/qCurrent.sampleRate);
+        const y=p0.yBase - rotated[pos]*(12*devicePixelRatio);
+        ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke();
+      });
+    }
+  });
+  ctx.strokeStyle='#60a5fa'; ctx.lineWidth=3;
+  marks.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,12*devicePixelRatio,0,Math.PI*2); ctx.stroke(); });
+  const pct=quizPct(); const hits=quizHits(off);
+  byId('hits').textContent=String(hits); byId('pct').textContent=pct+'%'; byId('bar').style.width=pct+'%';
+  requestAnimationFrame(drawQuiz);
+}
 requestAnimationFrame(drawQuiz);
 
-/* ==== Events ==== */
+/* ===== Events ===== */
 byId('langBtn').onclick=()=>{ setLang(LANG==='HU'?'EN':'HU'); };
-document.addEventListener('keydown',(e)=>{ if(e.key===' '){ if(mode==='explore'){ playing=!playing; byId('playBtn').textContent= playing?'⏯️ '+tK('pause'):'▶️ '+tK('play'); } if(mode==='identify'){ idFreeze=!idFreeze; } if(mode==='quiz'){ qFreeze=!qFreeze; } e.preventDefault(); } if(e.key==='ArrowRight'){ speed=Math.min(5, speed+0.1); byId('speed').value=String(speed); byId('spdLbl').textContent=speed.toFixed(1)+'×'; } if(e.key==='ArrowLeft'){ speed=Math.max(0.5, speed-0.1); byId('speed').value=String(speed); byId('spdLbl').textContent=speed.toFixed(1)+'×'; } });
+document.addEventListener('keydown',(e)=>{
+  if(e.key===' '){
+    if(mode==='explore'){ playing=!playing; byId('playBtn').textContent= playing?'⏯️ '+tK('pause'):'▶️ '+tK('play'); }
+    if(mode==='identify'){ idFreeze=!idFreeze; }
+    if(mode==='quiz'){ qFreeze=!qFreeze; }
+    e.preventDefault();
+  }
+  if(e.key==='ArrowRight'){ speed=Math.min(5, speed+0.1); byId('speed').value=String(speed); byId('spdLbl').textContent=speed.toFixed(1)+'×'; }
+  if(e.key==='ArrowLeft'){ speed=Math.max(0.5, speed-0.1); byId('speed').value=String(speed); byId('spdLbl').textContent=speed.toFixed(1)+'×'; }
+});
 
-/* ==== Init ==== */
-function init(){ refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons(); syncTexts(); setTab('explore'); try { console.assert(typeof quizTotal()==='number', 'quizTotal should return number'); console.assert(document.getElementById('lessonSel'), 'lessonSel missing'); } catch(e){ console.error('Self-test', e); } }
+/* ===== Init ===== */
+function refreshCaseOptionsQ(){ /* defined above */ } // keep linter happy
+function init(){
+  refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons();
+  syncTexts(); setTab('explore');
+  try {
+    console.assert(typeof quizTotal()==='number', 'quizTotal should return number');
+    console.assert(document.getElementById('lessonSel'), 'lessonSel missing');
+  } catch(e){ console.error('Self-test', e); }
+}
 init();
 </script>
 </body>
