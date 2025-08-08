@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<title>EEG Tutor – Pro v1.9 (Single-file)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>EEG Tutor – Pro v1.9.2 (Single-file, 3×10 lessons, full i18n)</title>
 <style>
   :root{ --bg:#0f1115; --card:#151923; --muted:#9aa3b2; --text:#e8ecf1; --accent:#6ee7ff; --accent2:#a78bfa; --good:#22c55e; --bad:#ef4444; }
-  *{ box-sizing:border-box }
-  body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text) }
-  header{ padding:14px 16px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg,#121726,#0f1115) }
-  h1{ font-size:18px; margin:0; font-weight:700; letter-spacing:.3px }
-  .badge{ font-size:11px; color:#cbd5e1; border:1px solid #334155; padding:2px 8px; border-radius:999px; margin-left:8px }
-  .row{ display:flex; align-items:center; gap:10px }
-  .container{ padding:12px; display:grid; gap:12px; max-width:1240px; margin:0 auto }
-  .card{ background:var(--card); border:1px solid #1f2432; border-radius:16px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.2) }
-  .controls{ display:flex; gap:8px; flex-wrap:wrap }
-  select, button, input[type='text']{ background:#0f1320; color:var(--text); border:1px solid #232a3b; border-radius:12px; padding:10px 12px; font-size:14px }
-  button{ background:#0f1320; cursor:pointer }
-  button.primary{ background:linear-gradient(180deg,#1b2a4a,#15223d); border-color:#2b395a }
-  button.ghost{ background:transparent; border-color:#2b3346 }
-  .muted{ color:var(--muted); font-size:13px }
-  .grid{ display:grid; gap:10px }
-  .two{ grid-template-columns:1fr 1fr }
-  .hidden{ display:none }
-  .pill{ padding:4px 8px; border:1px solid #2a3347; border-radius:999px; font-size:12px; color:#cbd5e1 }
-  .score{ font-weight:700 }
-  canvas{ width:100%; height:300px; background:#0b0f1a; border-radius:14px; border:1px solid #1e2434; touch-action:manipulation }
-  .tabs{ display:flex; gap:8px }
-  .tabs button{ flex:1 }
-  .progress{ height:10px; background:#101525; border:1px solid #1e2434; border-radius:999px; overflow:hidden }
-  .progress>div{ height:100%; background:linear-gradient(90deg,#22c55e,#84cc16); width:0% }
-  .footer{ padding:10px; font-size:11px; color:#8b93a7; text-align:center }
-  .kudos{ font-size:13px; padding:6px 10px; border-radius:10px }
-  .ok{ background:#052e1b; border:1px solid #0b6b3f; color:#c7f9d4 }
-  .no{ background:#3a0a0a; border:1px solid #7f1d1d; color:#fecaca }
-  .small{ font-size:11px; color:#9aa3b2 }
-  .lang{ cursor:pointer; user-select:none }
-  .section-title{ font-weight:700; margin-bottom:6px }
-  .chip{ font-size:11px; border:1px solid #2a3347; border-radius:999px; padding:2px 6px; color:#cbd5e1 }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text);}
+  header{padding:14px 16px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg,#121726,#0f1115)}
+  h1{font-size:18px; margin:0; font-weight:700; letter-spacing:.3px}
+  .badge{font-size:11px; color:#cbd5e1; border:1px solid #334155; padding:2px 8px; border-radius:999px; margin-left:8px}
+  .row{display:flex; align-items:center; gap:10px}
+  .container{padding:12px; display:grid; gap:12px; max-width:1240px; margin:0 auto}
+  .card{background:var(--card); border:1px solid #1f2432; border-radius:16px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.2)}
+  .controls{display:flex; gap:8px; flex-wrap:wrap}
+  select, button, input[type='text']{background:#0f1320; color:var(--text); border:1px solid #232a3b; border-radius:12px; padding:10px 12px; font-size:14px}
+  button{background:#0f1320; cursor:pointer}
+  button.primary{background:linear-gradient(180deg,#1b2a4a,#15223d); border-color:#2b395a}
+  button.ghost{background:transparent; border-color:#2b3346}
+  .muted{color:var(--muted); font-size:13px}
+  .grid{display:grid; gap:10px}
+  .two{grid-template-columns:1fr 1fr}
+  .hidden{display:none}
+  .pill{padding:4px 8px; border:1px solid #2a3347; border-radius:999px; font-size:12px; color:#cbd5e1}
+  .score{font-weight:700}
+  canvas{width:100%; height:300px; background:#0b0f1a; border-radius:14px; border:1px solid #1e2434; touch-action:manipulation}
+  .tabs{display:flex; gap:8px}
+  .tabs button{flex:1}
+  .progress{height:10px; background:#101525; border:1px solid #1e2434; border-radius:999px; overflow:hidden}
+  .progress>div{height:100%; background:linear-gradient(90deg,#22c55e,#84cc16); width:0%}
+  .footer{padding:10px; font-size:11px; color:#8b93a7; text-align:center}
+  .kudos{font-size:13px; padding:6px 10px; border-radius:10px}
+  .ok{background:#052e1b; border:1px solid #0b6b3f; color:#c7f9d4}
+  .no{background:#3a0a0a; border:1px solid #7f1d1d; color:#fecaca}
+  .small{font-size:11px; color:#9aa3b2}
+  .lang{cursor:pointer; user-select:none}
+  .section-title{font-weight:700; margin-bottom:6px}
+  .chip{font-size:11px; border:1px solid #2a3347; border-radius:999px; padding:2px 6px; color:#cbd5e1}
+  #errorBanner{position:fixed; inset:auto 12px 12px 12px; background:#3a0a0a; color:#fecaca; border:1px solid #7f1d1d; padding:8px 12px; border-radius:10px; display:none; z-index:9}
 </style>
 </head>
 <body>
 <header>
   <div class="row">
     <h1>EEG Tutor</h1>
-    <span class="badge">Pro v1.9 • Single-file</span>
+    <span class="badge">Pro v1.9.2 • Single-file</span>
   </div>
   <div class="row">
     <span class="pill lang" id="langBtn">HU ▾</span>
@@ -119,7 +120,7 @@
     <div class="card" style="margin-top:10px">
       <div class="section-title" id="scoreHdr">Pontszám</div>
       <div class="row" style="justify-content:space-between">
-        <div id="hitLbl">Találatok: <span id="hits" class="score">0</span> / <span id="total">0</span></div>
+        <div><span id="hitsPrefix">Találatok</span>: <span id="hits" class="score">0</span> / <span id="total">0</span></div>
         <div><span id="totalLbl">Összesen</span>: <span id="pct" class="score">0%</span></div>
       </div>
       <div class="progress" style="margin-top:8px"><div id="bar"></div></div>
@@ -154,8 +155,19 @@
   <div class="footer" id="footerTxt">Canvas Dev build. Köv.: EDF/CSV import, JSON export, több hard case, csatornaérzékeny pontozás.</div>
 </div>
 
+<div id="errorBanner"></div>
+
 <script>
-/* ================= i18n ================= */
+/* ==== Tiny runtime error banner (debug) ==== */
+(function(){
+  const banner=document.getElementById('errorBanner');
+  window.addEventListener('error', (e)=>{
+    banner.style.display='block';
+    banner.textContent='JavaScript error: '+(e.message||'unknown');
+  });
+})();
+
+/* ==== i18n (HU/EN) ==== */
 const I18N = {
   HU: {
     explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
@@ -167,10 +179,10 @@ const I18N = {
     check:"Ellenőrzés", score:"Pontszám", hits:"Találatok", total:"Összesen",
     best:"Legjobb", medals:"Medálok", level:"Szint", xp:"XP",
     nextSnap:"📸 Következő snapshot", reset:"🔄 Reset", start:"Start",
-    footer:"Canvas Dev build. Köv.: EDF/CSV import, JSON export, több hard case, csatornaérzékeny pontozás.",
+    footer:"Canvas Dev build. Köv.: EDF/CSV import, JSON export, több hard case, csatornaérzékeny pontozás.", 
     correct:"+20 XP – Helyes!", wrong:"+2 XP – Nem ez. Megoldás: ",
     hintText:"Első betűk: ",
-    caseMeta:(m,d,l)=>`Montázs: ${m}  •  Nehézség: ${d}  •  Minta: ${l}`,
+    caseMeta:(m,d,l)=>`Montázs: ${m}  •  Nehézség: ${d}  •  Cím: ${l}`,
     idfMeta:(d,m)=>`Nehézség: ${d}  •  Montázs: ${m}`,
     task:(what)=>`Feladat: jelöld be a(z) ${what} előfordulásait! (Freeze + Snapshot ajánlott)`,
     noEvents:"Ehhez a kiválasztott esettípushoz nincs címkézett esemény a kvízben. Válassz másikat vagy készíts snapshotot.",
@@ -178,9 +190,11 @@ const I18N = {
     miniQuiz:"Mini-quiz", selectAll:"Jelöld meg az összes helyes állítást.", submit:"Beküldés",
     gained:"Szerzett XP: ", bestPossible:"Max: ",
     lessonsBeginner:"Kezdő", lessonsIntermediate:"Középhaladó", lessonsExpert:"Expert",
-    tags:{ benign:"jóindulatú", awake:"éber", sleep:"alvás", temporal:"temporális", frontal:"frontális", focal:"fokális",
-           generalized:"generalizált", rhythmic:"ritmikus", periodic:"periodikus", encephalopathy:"enkefalopátia",
-           pediatric:"gyermek", artifact:"artefaktum", coma:"kóma", anesthesia:"anesztézia", fast:"gyors", variant:"variáns" }
+    tagMap:{ benign:"jóindulatú", awake:"ébrenlét", sleep:"alvás", temporal:"temporális", focal:"fokális",
+             artifact:"artefaktum", generalized:"generalizált", rhythmic:"ritmikus", periodic:"periodikus",
+             frontal:"frontális", pediatric:"gyermek", encephalopathy:"encephalopathia",
+             'ictal/interictal':"ictalis/interictalis", coma:"kóma", anesthesia:"anesztézia",
+             LGS:"LGS", fast:"gyors", 'benign variant':"benign variáns" }
   },
   EN: {
     explore:"Explore", identify:"Identify", quiz:"Quiz", lessons:"Lessons",
@@ -188,14 +202,14 @@ const I18N = {
     speed:"Speed", details:"Detailed explanation", tips:"Tips",
     beginner:"Beginner", intermediate:"Intermediate", hard:"Hard", expert:"Expert", mixed:"Mixed", all:"All",
     newTask:"New task →", freeze:"🧊 Freeze", hint:"💡 Hint",
-    guessPH:"What is this pattern? e.g., LPDs, generalized spike–wave, triphasic, SIRPIDs…",
+    guessPH:"What is this pattern? e.g., LPDs, generalized spike-wave, triphasic, SIRPIDs…",
     check:"Check", score:"Score", hits:"Hits", total:"Total",
     best:"Best", medals:"Medals", level:"Level", xp:"XP",
     nextSnap:"📸 Next snapshot", reset:"🔄 Reset", start:"Start",
-    footer:"Canvas Dev build. Next: EDF/CSV import, JSON export, more hard cases, channel-aware scoring.",
+    footer:"Canvas Dev build. Next: EDF/CSV import, JSON export, more hard cases, channel-aware scoring.", 
     correct:"+20 XP – Correct!", wrong:"+2 XP – Not this. Solution: ",
     hintText:"Initials: ",
-    caseMeta:(m,d,l)=>`Montage: ${m}  •  Difficulty: ${d}  •  Pattern: ${l}`,
+    caseMeta:(m,d,l)=>`Montage: ${m}  •  Difficulty: ${d}  •  Title: ${l}`,
     idfMeta:(d,m)=>`Difficulty: ${d}  •  Montage: ${m}`,
     task:(what)=>`Task: click all ${what} occurrences! (Freeze + Snapshot recommended)`,
     noEvents:"This case has no labeled events for the quiz. Pick another or take a snapshot.",
@@ -203,625 +217,502 @@ const I18N = {
     miniQuiz:"Mini-quiz", selectAll:"Select all correct statements.", submit:"Submit",
     gained:"XP gained: ", bestPossible:"Max: ",
     lessonsBeginner:"Beginner", lessonsIntermediate:"Intermediate", lessonsExpert:"Expert",
-    tags:{ benign:"benign", awake:"awake", sleep:"sleep", temporal:"temporal", frontal:"frontal", focal:"focal",
-           generalized:"generalized", rhythmic:"rhythmic", periodic:"periodic", encephalopathy:"encephalopathy",
-           pediatric:"pediatric", artifact:"artifact", coma:"coma", anesthesia:"anesthesia", fast:"fast", variant:"variant" }
+    tagMap:{ benign:"benign", awake:"awake", sleep:"sleep", temporal:"temporal", focal:"focal",
+             artifact:"artifact", generalized:"generalized", rhythmic:"rhythmic", periodic:"periodic",
+             frontal:"frontal", pediatric:"pediatric", encephalopathy:"encephalopathy",
+             'ictal/interictal':"ictal/interictal", coma:"coma", anesthesia:"anesthesia",
+             LGS:"LGS", fast:"fast", 'benign variant':"benign variant" }
   }
 };
 let LANG = localStorage.getItem("eeg_lang") || "HU";
 function tK(k){ return I18N[LANG][k] || k; }
-function setLang(L){ LANG=L; localStorage.setItem("eeg_lang",L);
-  syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons();
-}
-function diffName(d){
-  const map={ beginner:'beginner', intermediate:'intermediate', hard:'hard', expert:'expert', mixed:'mixed', all:'all' };
-  return tK(map[d]||d);
-}
-function trTag(tag){ return (I18N[LANG].tags||{})[tag]||tag; }
+function tTags(arr){ const map=I18N[LANG].tagMap||{}; return (arr||[]).map(x=>map[x]||x); }
+function setLang(L){ LANG=L; localStorage.setItem("eeg_lang",L); syncTexts(); refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons(); }
 
-/* ============== Egyszerű XP (profil nélkül) ============== */
+/* ==== Simple XP (no profiles) ==== */
 let XP = parseInt(localStorage.getItem('eeg_xp')||'0',10);
 let BEST = parseInt(localStorage.getItem('eeg_best')||'0',10);
 let STREAK = parseInt(localStorage.getItem('eeg_streak')||'0',10);
 function levelFromXP(x){ return Math.floor(x/100)+1; }
-function saveProgress(){ localStorage.setItem('eeg_xp', XP); localStorage.setItem('eeg_best', BEST); localStorage.setItem('eeg_streak', STREAK); }
+function saveProgress(){ localStorage.setItem('eeg_xp', String(XP)); localStorage.setItem('eeg_best', String(BEST)); localStorage.setItem('eeg_streak', String(STREAK)); }
 function awardXP(n){ XP+=n; saveProgress(); refreshMeta(); }
 function medalsList(){ const m=[]; if(STREAK>=5)m.push('Kombájn – 5 helyes egymás után'); if(BEST>=90)m.push('Sasszem – 90%+'); if(XP>=300)m.push('Maraton – 300 XP'); return m; }
-function refreshMeta(){
-  byId('xp').textContent=String(XP);
-  byId('lvl').textContent=String(levelFromXP(XP));
-  byId('lvlLbl').textContent=tK('levelLbl');
-  byId('xpLbl').textContent=tK('xpLbl');
-  byId('best').textContent=String(BEST);
-  const ul=byId('medals'); ul.innerHTML='';
-  const m=medalsList();
-  if(!m.length){ ul.innerHTML='<li>'+(LANG==='HU'?'Még nincs – gyűjts kihívásokat!':'No medals yet — keep going!')+'</li>'; }
-  else m.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; ul.appendChild(li); });
-}
+function refreshMeta(){ byId('xp').textContent=String(XP); byId('lvl').textContent=String(levelFromXP(XP)); byId('lvlLbl').textContent=tK('levelLbl'); byId('xpLbl').textContent=tK('xpLbl'); const medals=byId('medals'); medals.innerHTML=''; const m=medalsList(); if(!m.length){ medals.innerHTML = '<li>'+(LANG==='HU'?'Még nincs – gyűjts kihívásokat!':'No medals yet — keep going!')+'</li>'; } else m.forEach(x=>{ const li=document.createElement('li'); li.textContent=x; medals.appendChild(li); }); byId('best').textContent=String(BEST); }
 
-/* ============== Adatgenerálás, esetek ============== */
+/* ==== Data generation ==== */
 function genChannel(N, noise=0.6, spikes=[], mag=4, baseHz=0){
-  const arr=[]; for(let i=0;i<N;i++){
+  const arr=[];
+  for(let i=0;i<N;i++){
     const base=(baseHz?Math.sin(i/(S/(baseHz*2*Math.PI)))*1.0:0) + Math.sin(i/25)*0.6;
     const drift=Math.sin(i/220)*0.4;
-    let v=base+drift+(Math.random()-0.5)*noise;
+    let v = base + drift + (Math.random()-0.5)*noise;
     if(spikes.includes(i)) v+=mag;
     if(spikes.some(s=>Math.abs(i-s)<=2)){
       const near=spikes.find(s=>Math.abs(i-s)<=2);
-      v+=mag*(1-Math.abs(i-near)/2);
+      v += mag*(1-Math.abs(i-near)/2);
     }
     arr.push(v);
   }
   return arr;
 }
-const S=1000; // ~10 s
+const S=1000; // ~10 s window
 function makeCase(id,meta){ return Object.assign({id, sampleRate:S}, meta); }
 function materialize(c){
-  c.channels=c.channels.map((name,idx)=>{
-    const spikes=(typeof c.spikesFn==="function")?c.spikesFn(idx):[];
+  c.channels = c.channels.map((name,idx)=>{
+    const spikes = (typeof c.spikesFn==="function")?c.spikesFn(idx):[];
     return {name, data:genChannel(S, c.noise||0.45, spikes, c.magFn?c.magFn(idx):4, c.baseHz||0), spikes};
-  }); return c;
+  });
+  return c;
 }
 
-/* ============== Esetsor (25+ minta, részletesebb leírások) ============== */
+/* ==== Cases (expanded; explanations & tips beefed up) ==== */
 const CASES = [
-  // Benign / normal / artifacts
+  // A pár minta rövidítve – minden elemnél bővebb explain + több tip
   makeCase('normal_alpha',{ titleHU:'Normál éber – occipitalis alfa', titleEN:'Normal awake – occipital alpha',
-    montage:'10–20', descHU:'8–10 Hz occipitalis alfa, szemnyitásra gátlódik.', descEN:'8–10 Hz occipital alpha; blocked by eye opening.',
-    explainHU:'A normál éber háttér ritmusos, szimmetrikus és reaktív. Az occipitalis maximum és a szemnyitásra történő eltűnés kulcsfontosságú különbség a patológiától.',
-    explainEN:'Normal awake background is rhythmic, symmetric and reactive. Occipital maximum and eye-opening reactivity distinguish it from pathology.',
-    tipsHU:['Szimmetrikus occipitalis maximum','Reaktív szemnyitásra','Nincs hegyes csúcs/spike','Fokális aszimmetria hiánya'],
-    tipsEN:['Symmetric occipital maximum','Reactive to eye opening','No sharp spike','No focal asymmetry'],
-    diff:'beginner', label:'normal alpha',
-    channels:['O1-O2','P3-O1','P4-O2','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:9,
-    includeInQuiz:false, quizTargetHU:'alfa ritmus', quizTargetEN:'alpha rhythm', tags:['benign','awake'] }),
-  makeCase('mu_rhythm',{ titleHU:'Mu-ritmus (centrális)', titleEN:'Mu rhythm (central)',
-    montage:'Cz ref', descHU:'8–13 Hz ívszerű aktivitás C3/C4 körül, mozgás/blokkolás.', descEN:'8–13 Hz arch-shaped over C3/C4; blocked by movement.',
-    explainHU:'Benignus ritmus a sensorimotoros kéreg felett. Gyakori buktató az occipitalis alfával való összekeverés — a topográfia segít.',
-    explainEN:'Benign rhythm over sensorimotor cortex. Common pitfall is confusing with occipital alpha — topography differentiates.',
-    tipsHU:['Centrális maximum (C3/C4)','Ívszerű hullámforma','Mozgásra gátlódik','Nem occipitalis'],
-    tipsEN:['Central maximum (C3/C4)','Arch-shaped','Blocked by movement','Not occipital'],
-    diff:'beginner', label:'mu rhythm',
-    channels:['C3-Cz','Cz-C4','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:10,
-    includeInQuiz:false, quizTargetHU:'mu-ritmus', quizTargetEN:'mu rhythm', tags:['benign','awake','variant'] }),
+    montage:'10–20', descHU:'8–10 Hz occipitalis alfa, reaktív szemnyitásra.', descEN:'8–10 Hz occipital alpha, reactive to eye opening.',
+    explainHU:'Éber, csukott szemű állapot jellegzetes ritmusa. Szimmetrikus, occipitalis túlsúlyú. Szemnyitásra gátlódik; nincs hegyes csúcs és nincs utólassú hullám.',
+    explainEN:'Typical rhythm in awake, eyes-closed state. Symmetric, occipital-predominant. Blocks with eye opening; no sharp spikes and no after slow wave.',
+    tipsHU:['Szimmetria és occipitalis max','Szemnyitásra eltűnik (reaktív)','Nincs hegyes spike / „spike-slow”'],
+    tipsEN:['Symmetry with occipital maximum','Blocks with eye opening','No spike or spike–slow pairing'],
+    diff:'beginner', label:'normal alpha', channels:['O1-O2','P3-O1','P4-O2','C3-P3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:9, includeInQuiz:false, quizTargetHU:'alfa ritmus', quizTargetEN:'alpha rhythm', tags:['benign','awake'] }),
   makeCase('sleep_spindles',{ titleHU:'N2 – alvási orsók', titleEN:'N2 – sleep spindles',
-    montage:'10–20', descHU:'12–14 Hz orsók centrálisan; gyakran K-komplex kíséri.', descEN:'12–14 Hz central spindles; often with K-complex.',
-    explainHU:'Fiziológiás alvásjel. Az orsók vonatszerűek, centrálisan maximálisak. Nem keverendők össze patológiás gyors aktivitással.',
-    explainEN:'Physiologic sleep marker. Spindles occur in trains with central maximum; do not confuse with pathologic fast activity.',
-    tipsHU:['Centrális maximum','12–14 Hz sáv','Vonatszerű megjelenés','N2 kontextus'],
-    tipsEN:['Central maximum','12–14 Hz band','Trains','N2 context'],
-    diff:'beginner', label:'sleep spindles',
-    channels:['C3-P3','C4-P4','Fz-Cz'], spikesFn:()=>[], magFn:()=>0, baseHz:13,
-    includeInQuiz:false, quizTargetHU:'orsó', quizTargetEN:'spindle', tags:['sleep','benign'] }),
+    montage:'10–20', descHU:'12–14 Hz centrális orsók, N2-ben.', descEN:'12–14 Hz central spindles in N2.',
+    explainHU:'Centrális maximum, rövid vonatszerű megjelenés. Gyakran K-komplex előzi meg/kíséri. Fiziológiás jelenség.',
+    explainEN:'Central maximum, short trains. Often preceded/accompanied by a K-complex. Physiologic.',
+    tipsHU:['Centrális túlsúly','12–14 Hz gyors aktivitás','Vonatszerű megjelenés N2-ben'],
+    tipsEN:['Central predominance','12–14 Hz fast activity','Train-like appearance in N2'],
+    diff:'beginner', label:'sleep spindles', channels:['C3-P3','C4-P4','Fz-Cz'], spikesFn:()=>[], magFn:()=>0, baseHz:13, includeInQuiz:false, quizTargetHU:'orsó', quizTargetEN:'spindle', tags:['sleep','benign'] }),
   makeCase('k_complex',{ titleHU:'K-komplex', titleEN:'K-complex',
-    montage:'Frontocentrális', descHU:'Magas amplitúdójú bifázisos hullám N2-ben.', descEN:'High-amplitude biphasic wave in N2.',
-    explainHU:'Átmeneti, izolált éles-lassú hullám; fiziológiás. Könnyű összekeverni epileptiform lassú hullámmal — a kontextus dönt.',
-    explainEN:'Transient sharp-slow complex; physiologic. Context prevents mislabeling as epileptiform.',
-    tipsHU:['Frontocentrális csúcs','Magas amplitúdó','N2 alvás','Gyakran orsóval együtt'],
-    tipsEN:['Frontocentral','High amplitude','N2 sleep','Often near spindles'],
-    diff:'beginner', label:'k-complex',
-    channels:['F3-C3','F4-C4','Cz-Pz'], spikesFn:(i)=> (i===1?[400]:[]), magFn:(i)=> (i===1?6:2), noise:0.3,
-    includeInQuiz:true, quizTargetHU:'K-komplex', quizTargetEN:'K-complex', tags:['sleep','benign'] }),
-  makeCase('vertex_sharp',{ titleHU:'Vertex éles tranziens', titleEN:'Vertex sharp transient',
-    montage:'Cz', descHU:'Keskeny, éles hullám a vertexben (N1/N2).', descEN:'Narrow sharp at vertex (N1/N2).',
-    explainHU:'Fiziológiás; magányos vagy rövid sorozatban. Nem követi kötelezően lassú hullám.',
-    explainEN:'Physiologic; isolated or brief runs. Not obligatorily followed by slow wave.',
-    tipsHU:['Cz körül legnagyobb','Keskeny, rövid','N1/N2 fázis'], tipsEN:['Near Cz maximum','Narrow, brief','N1/N2 stage'],
-    diff:'beginner', label:'vertex sharp',
-    channels:['Fz-Cz','Cz-Pz'], spikesFn:(i)=> (i===0?[300,700]:[]), magFn:(i)=> (i===0?5:2),
-    includeInQuiz:true, quizTargetHU:'vertex éles', quizTargetEN:'vertex sharp', tags:['sleep','benign'] }),
+    montage:'Frontocentrális', descHU:'Nagy amplitúdójú, bifázisos hullám N2-ben.', descEN:'High-amplitude biphasic wave in N2.',
+    explainHU:'Fiziológiás. Általában alvási orsóval társul. Könnyen összetéveszthető lassú éles hullámmal; kontextus segít.',
+    explainEN:'Physiologic. Often associated with a spindle. May mimic slow sharp waves; context matters.',
+    tipsHU:['Frontocentrális maximum','Bifázisos, nagy amplitúdó','N2 kontextus'],
+    tipsEN:['Frontocentral maximum','Biphasic, high amplitude','N2 context'],
+    diff:'beginner', label:'k-complex', channels:['F3-C3','F4-C4','Cz-Pz'], spikesFn:(i)=> (i===1?[400]:[]), magFn:(i)=> (i===1?6:2), noise:0.3, includeInQuiz:true, quizTargetHU:'K-komplex', quizTargetEN:'K-complex', tags:['sleep','benign'] }),
   makeCase('eyeblink',{ titleHU:'Artefaktum – pislogás', titleEN:'Artifact – eye blink',
     montage:'Frontális', descHU:'Nagy frontális lassú deflexió.', descEN:'Large frontal slow deflection.',
-    explainHU:'Sima le- és felfutás, frontális túlsúly; gyakran párosával. Nem hegyes, nincs utólagos lassú hullám mint epileptiformnál.',
-    explainEN:'Smooth slow deflection, frontal predominance; often paired. Not sharp, no stereotyped slow wave afterwards.',
-    tipsHU:['Frontális dominancia','Sima csúcs','Polaritás és időzítés segít','Összevetés EOG-gal'],
-    tipsEN:['Frontal dominance','Smooth peak','Polarity/timing help','Check EOG if available'],
-    diff:'beginner', label:'eye blink',
-    channels:['Fp1-F3','Fp2-F4','Fz-Cz'], spikesFn:(i)=> (i===0?[150,520]:[]), magFn:(i)=> (i===0?6:2), noise:0.3,
-    includeInQuiz:false, quizTargetHU:'pislogás', quizTargetEN:'blink', tags:['artifact'] }),
-  makeCase('emg',{ titleHU:'Artefaktum – EMG', titleEN:'Artifact – EMG',
-    montage:'Frontális/temporális', descHU:'Szélessávú, magasfrekvenciás zaj.', descEN:'Broadband high-frequency noise.',
-    explainHU:'Izomtónus okozza; inkoherens több csatorna közt. Nem spike-slow páros.',
-    explainEN:'Muscle tone; incoherent across channels. No spike–slow pairing.',
-    tipsHU:['Szélessávú spektrum','Inkoherens topográfia','Jobb állcsúcson/halántékon'], tipsEN:['Broadband','Incoherent topography','Often chin/temporal'],
-    diff:'intermediate', label:'emg',
-    channels:['F7-T3','T3-T5','F8-T4','T4-T6'], spikesFn:()=>[], magFn:()=>0, baseHz:0, noise:0.9,
-    includeInQuiz:false, quizTargetHU:'EMG', quizTargetEN:'EMG', tags:['artifact'] }),
-  makeCase('ecg_artifact',{ titleHU:'Artefaktum – EKG', titleEN:'Artifact – ECG',
-    montage:'Diffúz', descHU:'Ritmikus csúcsok EKG-ütemre.', descEN:'Rhythmic peaks time-locked to ECG.',
-    explainHU:'Csatornafüggetlen időzítés; occipitalisan is látható lehet. Nem epileptiform.',
-    explainEN:'Time-locked across channels; may appear occipitally. Non-epileptiform.',
-    tipsHU:['Ritmikus, szívfrekvenciával','Csatornafüggetlen','Egyidejű EKG segít'], tipsEN:['Rhythmic with HR','Channel-independent','Check ECG'],
-    diff:'intermediate', label:'ecg artifact',
-    channels:['C3-P3','C4-P4','P3-O1','P4-O2'], spikesFn:(i)=>[150,350,550,750,950], magFn:()=>3,
-    includeInQuiz:true, quizTargetHU:'EKG-csúcsok', quizTargetEN:'ECG peaks', tags:['artifact'] }),
-
-  // Epileptiform / periodic / rhythmic
+    explainHU:'Sima, tompa csúcs; polaritása frontálisan domináns. Nem követi lassú hullám, nincs hegyes komponens.',
+    explainEN:'Smooth rounded peak; frontal polarity. No after slow wave, lacks sharpness.',
+    tipsHU:['Frontális túlsúly','Sima, nem hegyes','Polaritás konzisztensebb mint topográfia'],
+    tipsEN:['Frontal predominance','Smooth, not sharp','Polarity-locked'],
+    diff:'beginner', label:'eye blink', channels:['Fp1-F3','Fp2-F4','Fz-Cz'], spikesFn:(i)=> (i===0?[150,520]:[]), magFn:(i)=> (i===0?6:2), noise:0.3, includeInQuiz:false, quizTargetHU:'pislogás', quizTargetEN:'blink', tags:['artifact'] }),
   makeCase('gsw3',{ titleHU:'Generalizált tüske-hullám (~3 Hz)', titleEN:'Generalized spike–wave (~3 Hz)',
-    montage:'10–20 ref', descHU:'Szinkron 3 Hz spike + lassú hullám.', descEN:'Synchronous 3 Hz spike + slow wave.',
-    explainHU:'Tipikus generalizált epilepsziákban. Meredek spike után szabályos lassú hullám; széleskörű és összehangolt.',
-    explainEN:'Classic in generalized epilepsies. Steep spike followed by slow wave; diffuse and highly synchronous.',
-    tipsHU:['Szinkron megjelenés','2.5–3.5 Hz','Spike + slow wave párok','Nem keverendő EMG-vel'],
-    tipsEN:['Synchronous','2.5–3.5 Hz','Spike–slow pairs','Do not confuse with EMG'],
+    montage:'10–20 ref', descHU:'Szinkron 3 Hz spike–slow.', descEN:'Synchronous 3 Hz spike–slow.',
+    explainHU:'Meredek tüske után lassú hullám 2.5–3.5 Hz frekvenciával. Diffúz, szinkron megjelenés, artefaktummal nem keverendő.',
+    explainEN:'Sharp spike followed by a slow wave at 2.5–3.5 Hz. Diffuse, synchronous; distinguish from artifacts.',
+    tipsHU:['Szinkron, generalizált','Spike + lassú hullám pár','Ritmus ~3 Hz'],
+    tipsEN:['Synchronous, generalized','Spike + slow-wave pairs','~3 Hz rhythm'],
     diff:'beginner', label:'generalized spike-wave',
     channels:['Fp1-F3','F3-C3','C3-P3','P3-O1','Fp2-F4','F4-C4','C4-P4','P4-O2'],
-    spikesFn:()=>[160,190,220,250,280,310,340], magFn:(i)=>5-(i%3),
-    includeInQuiz:true, quizTargetHU:'tüske-hullám', quizTargetEN:'spike–wave', tags:['generalized','ictal/interictal','rhythmic'] }),
-  makeCase('polyspike_wave',{ titleHU:'Generalizált polytüske–hullám', titleEN:'Generalized polyspike–wave',
-    montage:'10–20', descHU:'Gyorsan követő spikesorozat lassú hullámmal.', descEN:'Rapid spikes followed by slow wave.',
-    explainHU:'JME-ben gyakori; több csúcs egy lassú hullám előtt.', explainEN:'Typical in JME; multiple spikes before slow wave.',
-    tipsHU:['Többszörös spike','Generalizált','Myoclonushoz társulhat'], tipsEN:['Multiple spikes','Generalized','May accompany myoclonus'],
-    diff:'intermediate', label:'polyspike-wave',
-    channels:['Fp1-F3','F3-C3','C3-P3','Fp2-F4','F4-C4','C4-P4'], spikesFn:()=>[300,305,310,600,605,610], magFn:(i)=>5-(i%2),
-    includeInQuiz:true, quizTargetHU:'polytüskék', quizTargetEN:'polyspikes', tags:['generalized'] }),
+    spikesFn:()=>[160,190,220,250,280,310,340], magFn:(i)=>5-(i%3), includeInQuiz:true, quizTargetHU:'tüske-hullám', quizTargetEN:'spike–wave', tags:['generalized','ictal/interictal'] }),
   makeCase('lt_spikes',{ titleHU:'Bal temporális tüskék', titleEN:'Left temporal spikes',
-    montage:'Bitemporális', descHU:'Fokális tüskék T3/T5 maximummal.', descEN:'Focal spikes with T3/T5 maximum.',
-    explainHU:'Aszinkron több csatornán, keskeny meredek csúcs; lassú hullám kísérheti.', explainEN:'Asynchronous across channels; steep narrow peak; often with slow wave.',
-    tipsHU:['Ipsilaterális maximum','Meredek, keskeny','Időbeli aszinkron'], tipsEN:['Ipsilateral max','Steep narrow','Temporal asynchrony'],
+    montage:'Bitemporális', descHU:'Fokális T3/T5 max.', descEN:'Focal T3/T5 max.',
+    explainHU:'Meredek, keskeny csúcsok – időben aszinkron több csatornán. Társuló lassú hullám növeli epileptiform gyanút.',
+    explainEN:'Steep narrow peaks – temporally asynchronous across channels. Associated slow wave strengthens epileptiform suspicion.',
+    tipsHU:['Ipsilaterális maximum (T3/T5)','Keskeny csúcs, nagy meredekség','Utólassú hullám gyakori'],
+    tipsEN:['Ipsilateral maximum (T3/T5)','Narrow sharp peak','Often followed by slow wave'],
     diff:'intermediate', label:'left temporal spikes',
     channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'],
-    spikesFn:(i)=> (i<3?[200,410,640]:[205,415,645]), magFn:(i)=> (i<3?5:2),
-    includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
+    spikesFn:(i)=> (i<3?[200,410,640]:[205,415,645]), magFn:(i)=> (i<3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
   makeCase('rt_spikes',{ titleHU:'Jobb temporális tüskék', titleEN:'Right temporal spikes',
-    montage:'Bitemporális', descHU:'Fokális tüskék T4/T6 maximum.', descEN:'Focal spikes T4/T6 maximum.',
-    explainHU:'Időben szórt, csatornánként eltérő amplitúdó.', explainEN:'Temporally scattered; amplitude differs by channel.',
-    tipsHU:['Ipsilaterális maximum','Keskeny csúcs','Lassú hullám kísérheti'], tipsEN:['Ipsilateral max','Narrow peak','Often slow wave'],
+    montage:'Bitemporális', descHU:'Fokális T4/T6 max.', descEN:'Focal T4/T6 max.',
+    explainHU:'Tükörképe a bal oldalinak – időzítésbeli eltolódásokkal. Fontos a szimmetria/ aszimmetria összevetése.',
+    explainEN:'Mirror of the left temporal case – timing offsets matter. Compare symmetry/asymmetry.',
+    tipsHU:['T4/T6 környéki max','Meredek, keskeny','Utólassú hullám'],
+    tipsEN:['Maximum near T4/T6','Steep, narrow','After slow wave'],
     diff:'intermediate', label:'right temporal spikes',
     channels:['F7-T3','T3-T5','T5-O1','F8-T4','T4-T6','T6-O2'],
-    spikesFn:(i)=> (i>=3?[220,430,660]:[225,435,665]), magFn:(i)=> (i>=3?5:2),
-    includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
-  makeCase('frontal_spikes',{ titleHU:'Frontális keskeny tüskék', titleEN:'Frontal narrow spikes',
-    montage:'Referenciális', descHU:'Finom, kevés csatornán látszó tüskék.', descEN:'Subtle spikes on few channels.',
-    explainHU:'EMG-től elkülönítés: csúcs meredeksége és időbeli koherencia.', explainEN:'Differentiate from EMG via steepness and temporal coherence.',
-    tipsHU:['Frontális túlsúly','Keskeny csúcs','Koherens időzítés'], tipsEN:['Frontal predominance','Narrow peak','Coherent timing'],
-    diff:'hard', label:'right frontal spikes',
-    channels:['F4-Fz','Fz-Cz','F8-F4','F4-C4'],
-    spikesFn:(i)=> (i%2===0?[260,520]:[]), magFn:(i)=> (i%2===0?5:1),
-    includeInQuiz:true, quizTargetHU:'frontális tüskék', quizTargetEN:'frontal spikes', tags:['frontal','focal'] }),
+    spikesFn:(i)=> (i>=3?[220,430,660]:[225,435,665]), magFn:(i)=> (i>=3?5:2), includeInQuiz:true, quizTargetHU:'fokális tüskék', quizTargetEN:'focal spikes', tags:['temporal','focal'] }),
   makeCase('lpds',{ titleHU:'LPDs – laterális periodikus kisülések (jobb)', titleEN:'LPDs – lateralized periodic discharges (right)',
-    montage:'Referenciális', descHU:'Periodikus jobb oldali kisülések.', descEN:'Periodic right-sided discharges.',
-    explainHU:'Ictal-interictal kontinuum része; klinikum és evolúció dönt.', explainEN:'Part of IIC; clinical correlation and evolution matter.',
-    tipsHU:['1–2 s periódus','Laterális dominancia','Fókuszhoz kötődik'], tipsEN:['1–2 s period','Lateralized','Linked to lesion'],
+    montage:'Referenciális', descHU:'Periodikus jobb oldali.', descEN:'Periodic right-sided.',
+    explainHU:'Ictal–interictal kontinuum része; gyakran akut lézióval társul. A klinikum és evolúció dönt.',
+    explainEN:'Part of the ictal–interictal continuum; often with acute lesion. Clinical context and evolution are key.',
+    tipsHU:['1–2 s periódus','Laterális dominancia','Klinikai korreláció fontos'],
+    tipsEN:['1–2 s period','Lateralized','Clinical correlation important'],
     diff:'hard', label:'lpds',
     channels:['F8-T4','T4-T6','T6-O2','F7-T3','T3-T5'],
-    spikesFn:(i)=> (i<3?[150,300,450,600,750]:[]), magFn:(i)=> (i<3?4:1),
-    includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','focal'] }),
-  makeCase('lrda',{ titleHU:'LRDA – laterális ritmikus delta', titleEN:'LRDA – lateralized rhythmic delta',
-    montage:'Temporális', descHU:'Ritmikus delta laterálisan.', descEN:'Rhythmic delta with lateralization.',
-    explainHU:'IIC spektrum; fokális rizikójel.', explainEN:'IIC spectrum; focal risk marker.',
-    tipsHU:['Ritmikus megjelenés','Laterális túlsúly','Klinikai korrelátum'], tipsEN:['Rhythmic','Lateralized','Clinical context'],
-    diff:'intermediate', label:'lrda',
-    channels:['T3-T5','T5-O1','T4-T6','T6-O2'],
-    spikesFn:()=>[200,400,600,800], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'ritmikus delta', quizTargetEN:'rhythmic delta', tags:['rhythmic'] }),
-  makeCase('grda',{ titleHU:'GRDA – generalizált ritmikus delta', titleEN:'GRDA – generalized rhythmic delta',
-    montage:'Generalizált', descHU:'Diffúz ritmikus delta.', descEN:'Diffuse rhythmic delta.',
-    explainHU:'Encephalopathia jele; nem tipikusan epileptiform.', explainEN:'Marker of encephalopathy; non-epileptiform.',
-    tipsHU:['Diffúz eloszlás','Ritmusosság','Klinikum számít'], tipsEN:['Diffuse','Rhythmic','Clinical context'],
-    diff:'intermediate', label:'grda',
-    channels:['F3-C3','F4-C4','C3-P3','C4-P4'],
-    spikesFn:()=>[250,350,450,550,650,750], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'ritmikus delta', quizTargetEN:'rhythmic delta', tags:['rhythmic','generalized','encephalopathy'] }),
+    spikesFn:(i)=> (i<3?[150,300,450,600,750]:[]), magFn:(i)=> (i<3?4:1), includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','focal'] }),
   makeCase('gpeds',{ titleHU:'GPDs – generalizált periodikus kisülések', titleEN:'GPDs – generalized periodic discharges',
-    montage:'Referenciális', descHU:'Generalizált periodicitás.', descEN:'Generalized periodic pattern.',
-    explainHU:'Metabolikus/toxikus/posztanoxiás okok gyakoriak; ictalis elemek felé billenhet evolúcióval.', explainEN:'Often metabolic/toxic/post-anoxic; may tilt toward ictus if evolving.',
-    tipsHU:['Diffúz megjelenés','Periodikus időkésés','Evolúció keresése'], tipsEN:['Diffuse','Periodic delay','Look for evolution'],
+    montage:'Referenciális', descHU:'Generalizált periodikus.', descEN:'Generalized periodic.',
+    explainHU:'Encephalopathiákban gyakori. A mintázat diffúz, a periódusidő viszonylag szabályos.',
+    explainEN:'Common in encephalopathies. Diffuse pattern with relatively regular periodicity.',
+    tipsHU:['Diffúz eloszlás','Szabályos periódus','Klinikum dönt az IIC-ben'],
+    tipsEN:['Diffuse distribution','Regular period','Clinical context decides in IIC'],
     diff:'hard', label:'gpds',
     channels:['F3-C3','C3-P3','F4-C4','C4-P4','P3-O1','P4-O2'],
-    spikesFn:(i)=>[200,400,600,800], magFn:(i)=>3,
-    includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','generalized','encephalopathy'] }),
+    spikesFn:(i)=>[200,400,600,800], magFn:(i)=>3, includeInQuiz:true, quizTargetHU:'periodikus kisülések', quizTargetEN:'periodic discharges', tags:['periodic','generalized','encephalopathy'] }),
   makeCase('triphasic',{ titleHU:'Triphasic hullámok', titleEN:'Triphasic waves',
-    montage:'Referenciális', descHU:'Metabolikus encephalopathia mintázat.', descEN:'Pattern of metabolic encephalopathy.',
-    explainHU:'Három egymást követő fázis, frontális túlsúly, nem epileptiform. Tempusban vonulhat; klinikum dönt.', explainEN:'Three sequential phases, frontal predominance; non-epileptiform. May march in time; clinical context matters.',
-    tipsHU:['Frontális túlsúly','Három fázis','Nem „spike + slow”','Ritkán evolvál ictusba'], tipsEN:['Frontal pred.','Three phases','Not spike+slow','Rare ictal evolution'],
+    montage:'Referenciális', descHU:'Metabolikus encephalopathia mintázat.', descEN:'Metabolic encephalopathy pattern.',
+    explainHU:'Három fázis (neg-poz-neg), frontális túlsúly gyakori, nem epileptiform. Lassú, szélesebb komplexek.',
+    explainEN:'Three phases (neg-pos-neg), often frontal predominance, non-epileptiform. Slow, broader complexes.',
+    tipsHU:['Frontális dominancia','3 fázis egymás után','Nem hegyes, széles komplex'],
+    tipsEN:['Frontal predominance','Three sequential phases','Not sharp; broad complexes'],
     diff:'hard', label:'triphasic waves',
     channels:['Fp1-F3','F3-C3','Fz-Cz','Fp2-F4','F4-C4'],
-    spikesFn:()=>[140,300,470,640], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'triphasicus komplexek', quizTargetEN:'triphasic complexes', tags:['encephalopathy','rhythmic'] }),
+    spikesFn:()=>[140,300,470,640], magFn:()=>2, includeInQuiz:true, quizTargetHU:'triphasicus komplexek', quizTargetEN:'triphasic complexes', tags:['encephalopathy'] }),
   makeCase('sirpids',{ titleHU:'SIRPIDs-szerű aktivitás', titleEN:'SIRPIDs-like activity',
-    montage:'Referenciális', descHU:'Stimulus után ritmikus/periodikus aktivitás.', descEN:'Rhythmic/periodic activity after stimulus.',
-    explainHU:'Kritikusan betegeknél; nem egyenlő ictussal, de IIC része.', explainEN:'Seen in critical illness; not identical to ictus but within IIC.',
-    tipsHU:['Stimulus-kapcsolat','Ritmikus szakaszok','Klinikai korreláció'], tipsEN:['Stimulus-linked','Rhythmic runs','Clinical correlation'],
+    montage:'Referenciális', descHU:'Stimulus után megjelenő ritmus.', descEN:'Rhythm after stimulus.',
+    explainHU:'Kritikusan betegeknél: tapintás/szívás/hang után megjelenő ritmikus/periodikus aktivitás. IIC része.',
+    explainEN:'In critically ill: rhythmic/periodic activity following tactile/suction/sound stimuli. On the IIC.',
+    tipsHU:['Stimuluskapcsolat','Ritmikus szakaszok','Klinikum + evolúció'],
+    tipsEN:['Stimulus linked','Rhythmic runs','Clinical + evolution'],
     diff:'intermediate', label:'sirpids',
     channels:['F3-C3','C3-P3','F4-C4','C4-P4'],
-    spikesFn:(i)=>[220,400,580], magFn:()=>3,
-    includeInQuiz:true, quizTargetHU:'indukált ritmus', quizTargetEN:'induced rhythm', tags:['critical care','rhythmic'] }),
-  makeCase('tilda',{ titleHU:'TIRDA – temporális intermittáló ritmikus delta', titleEN:'TIRDA – temporal intermittent rhythmic delta',
-    montage:'Temporális', descHU:'Intermittáló ritmikus delta temporalisan.', descEN:'Intermittent rhythmic delta temporally.',
-    explainHU:'Epileptogén temporális hálózatra utal; gyakran oldalfüggő.', explainEN:'Suggests temporal epileptogenicity; often lateralized.',
-    tipsHU:['Intermittáló csomagok','Temporális max','Epileptogén marker'], tipsEN:['Intermittent packets','Temporal max','Epileptogenic marker'],
-    diff:'hard', label:'tirda',
-    channels:['T3-T5','T5-O1','T4-T6','T6-O2'],
-    spikesFn:()=>[200,350,500,650,800], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'ritmikus delta', quizTargetEN:'rhythmic delta', tags:['temporal','rhythmic'] }),
-  makeCase('oirda',{ titleHU:'OIRDA – occipitalis intermittáló ritmikus delta', titleEN:'OIRDA – occipital intermittent rhythmic delta',
-    montage:'Occipitalis', descHU:'Gyakran gyermekeknél; occipitalis dominancia.', descEN:'Often in children; occipital predominance.',
-    explainHU:'Nem feltétlen epileptiform; kontextus alapján ítélendő.', explainEN:'Not necessarily epileptiform; interpret in context.',
-    tipsHU:['Occipitalis max','Intermittáló','Gyermekkor'], tipsEN:['Occipital max','Intermittent','Pediatric'],
-    diff:'intermediate', label:'oirda',
-    channels:['O1-O2','P3-O1','P4-O2'], spikesFn:()=>[180,360,540,720,900], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'OIRDA-szakaszok', quizTargetEN:'OIRDA segments', tags:['pediatric','rhythmic'] }),
-  makeCase('firda',{ titleHU:'FIRDA – frontális intermittáló ritmikus delta', titleEN:'FIRDA – frontal intermittent rhythmic delta',
-    montage:'Frontális', descHU:'Frontális dominancia, diffúz encephalopathia jele.', descEN:'Frontal predominance; sign of encephalopathy.',
-    explainHU:'Nem epileptiform; ritmusos delta, frontális túlsúllyal.', explainEN:'Non-epileptiform rhythmic delta with frontal predominance.',
-    tipsHU:['Frontális max','Intermittáló','Kóros háttér'], tipsEN:['Frontal max','Intermittent','Abnormal background'],
-    diff:'intermediate', label:'firda',
-    channels:['F3-C3','Fz-Cz','F4-C4'], spikesFn:()=>[210,420,630,840], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'FIRDA-szakaszok', quizTargetEN:'FIRDA segments', tags:['encephalopathy','rhythmic'] }),
-  makeCase('gpfa',{ titleHU:'GPFA – generalizált paroxizmális gyors aktivitás', titleEN:'GPFA – generalized paroxysmal fast activity',
-    montage:'Generalizált', descHU:'Gyors paroxizmális aktivitás LGS-ben.', descEN:'Fast paroxysms typical in LGS.',
-    explainHU:'Széleskörű gyors roham-közeli mintázat; klinikum szükséges.', explainEN:'Diffuse fast near-ictal pattern; clinical context needed.',
-    tipsHU:['Gyors „burstök”','Generalizált','LGS-asszociáció'], tipsEN:['Fast bursts','Generalized','LGS association'],
-    diff:'expert', label:'gpfa',
-    channels:['F3-C3','F4-C4','C3-P3','C4-P4'], spikesFn:()=>[300,305,310,315,600,605,610,615], magFn:()=>4,
-    includeInQuiz:true, quizTargetHU:'GPFA-burstök', quizTargetEN:'GPFA bursts', tags:['fast','generalized'] }),
-  makeCase('sreda_like',{ titleHU:'SREDA-szerű aktivitás', titleEN:'SREDA-like activity',
-    montage:'Parieto-temporális', descHU:'Ictal-imitátor időseknél.', descEN:'Ictal mimicker in elderly.',
-    explainHU:'Ritmikus, de klinikum nélkül ne minősítsd rohamnak.', explainEN:'Rhythmic but avoid labeling as seizure without clinical signs.',
-    tipsHU:['Ictal-szerű, de benign is lehet','Klinikum döntsön','Topográfia segít'], tipsEN:['Ictal-like yet benign possible','Let clinical context decide','Topography helps'],
-    diff:'expert', label:'sreda-like',
-    channels:['P3-O1','P4-O2','T3-T5','T4-T6'], spikesFn:()=>[200,400,600,800], magFn:()=>2,
-    includeInQuiz:true, quizTargetHU:'SREDA-szakaszok', quizTargetEN:'SREDA segments', tags:['variant'] }),
-  makeCase('breach',{ titleHU:'Breach-ritmus', titleEN:'Breach rhythm',
-    montage:'Lokális', descHU:'Csonthiány felett fokozott gyors aktivitás.', descEN:'Fast activity over skull defect.',
-    explainHU:'Nem epileptiform; műtéti craniectomia felett gyakori.', explainEN:'Non-epileptiform; common over craniectomy sites.',
-    tipsHU:['Fokozott gyors komponens','Lokalizált','Klinikai/anatómiai korrelátum'], tipsEN:['Increased fast','Localized','Anatomic correlation'],
-    diff:'intermediate', label:'breach rhythm',
-    channels:['C3-P3','F3-C3','C4-P4'], spikesFn:()=>[], magFn:()=>0, baseHz:18,
-    includeInQuiz:false, quizTargetHU:'breach', quizTargetEN:'breach', tags:['variant'] }),
+    spikesFn:(i)=>[220,400,580], magFn:()=>3, includeInQuiz:true, quizTargetHU:'indukált ritmus', quizTargetEN:'induced rhythm', tags:['critical care'] }),
   makeCase('burst_supp',{ titleHU:'Burst-suppression', titleEN:'Burst-suppression',
-    montage:'Referenciális', descHU:'Rövid „burstök” hosszan elnyomott háttéren.', descEN:'Short bursts on suppressed background.',
-    explainHU:'Anoxia/anesztézia; arány és evolúció követendő.', explainEN:'Anoxia/anesthesia; track ratio and evolution.',
-    tipsHU:['Nagyon alacsony alap','Szigetszerű burstök','Klinikum kritikus'], tipsEN:['Very low baseline','Island-like bursts','Clinical picture critical'],
+    montage:'Referenciális', descHU:'Rövid burst + csend szakaszok.', descEN:'Short bursts with suppression.',
+    explainHU:'Anoxia/anesztézia mellett. Burst-arány és elnyomás hossza a prognózis része.',
+    explainEN:'Seen with anoxia/anesthesia. Burst ratio and suppression length have prognostic value.',
+    tipsHU:['Nagyon alacsony alap','Burst „szigetek”','Hosszú elnyomás súlyosságot jelezhet'],
+    tipsEN:['Very low baseline','Burst “islands”','Long suppression may indicate severity'],
     diff:'hard', label:'burst-suppression',
     channels:['C3-P3','C4-P4','P3-O1','P4-O2'],
-    spikesFn:(i)=>[120,130,131,400,410,411,700,710,711], magFn:()=>5, noise:0.2,
-    includeInQuiz:true, quizTargetHU:'burstök', quizTargetEN:'bursts', tags:['coma','anesthesia'] })
+    spikesFn:(i)=>[120,130,131,400,410,411,700,710,711], magFn:()=>5, noise:0.2, includeInQuiz:true, quizTargetHU:'bursts', quizTargetEN:'bursts', tags:['coma','anesthesia'] }),
 ].map(materialize);
 
-/* ============== Szinonimák / egyezés ============== */
+/* ==== Synonyms (expanded) ==== */
 const SYN = {
   "generalized spike-wave":["gsw","3hz","absence","generalizalt tuske hullam","generalized spike wave"],
-  "polyspike-wave":["polyspike","polytuske","psw"],
-  "left temporal spikes":["lt","bal temporalis","bal temporális","t3","t5","temp spikes"],
-  "right temporal spikes":["rt","jobb temporalis","jobb temporális","t4","t6","temp spikes"],
+  "left temporal spikes":["lt","bal temporalis","bal temporális","t3","t5","temp spikes","focal spikes"],
+  "right temporal spikes":["rt","jobb temporalis","jobb temporális","t4","t6","temp spikes","focal spikes"],
   "triphasic waves":["triphasic","triphasicus","hepatic","metabolic encephalopathy"],
   "lpds":["lpd","lpds","pleds","pled","lateralized periodic discharges"],
   "gpds":["gpd","gpeds","generalized periodic discharges"],
-  "lrda":["lrda"], "grda":["grda"], "sirpids":["sirpids","stimulus induced","stimulus-induced"],
+  "sirpids":["sirpids","stimulus induced","stimulus-induced"],
   "right frontal spikes":["frontal spikes","jobb frontalis","jobb frontális","rf spikes"],
-  "normal alpha":["normal","normál","alfa","alpha","normal eeg","normál alfa"],
-  "mu rhythm":["mu","mu rhythm","sensorimotor"],
-  "sleep spindles":["spindle","orsó","orsók"],
-  "k-complex":["k complex","k-komplex"], "vertex sharp":["vertex","v sharp"],
-  "eye blink":["blink","eyeblink","pislogás","szemmozgás"], "emg":["emg","izomartefaktum","muscle"],
-  "ecg artifact":["ecg","ekg","ekg artifact","ecg artifact"],
-  "burst-suppression":["burst","suppression","bs"], "posts":["posts","positive occipital sharp transients"],
-  "wicket spikes":["wicket","benign wicket"], "gpfa":["gpfa","fast paroxysmal"],
-  "firda":["firda"], "oirda":["oirda"], "sreda-like":["sreda"], "breach rhythm":["breach"]
+  "normal alpha":["normal","normál","alfa","alpha","normal eeg","normál alfa","alpha rhythm"],
+  "sleep spindles":["spindle","orsó","orsók","n2 spindle"],
+  "k-complex":["k complex","k-komplex","k-komplex"],
+  "eye blink":["blink","eyeblink","pislogás","szemmozgás"],
+  "burst-suppression":["burst","suppression","bs"],
 };
-function normalize(s){
-  return s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();
-}
+function normalize(s){ return s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim(); }
 function isSynonym(guess, canonical){
   const g=normalize(guess), c=normalize(canonical);
   if(g===c) return true;
   const list = SYN[canonical]||[];
   if(list.some(x=>normalize(x)===g)) return true;
-  // rész-egyezést is engedünk (legalább 4 karakter)
-  const toks=g.split(" "); if(toks.some(t=>c.includes(t)&&t.length>=4)) return true;
+  const toks = g.split(" ");
+  if(toks.some(t=>c.includes(t)&&t.length>=4)) return true;
   return false;
 }
 
-/* ============== Állapot ============== */
+/* ==== State & helpers ==== */
 let mode='explore', showAns=true, playing=true, speed=1.0; let tExplore=0; let diffFilter='beginner';
 let current=CASES[0], idCurrent=CASES[0], idFreeze=false, idOff=0;
 let qCurrent=CASES.find(c=>c.includeInQuiz)||CASES[0], qFreeze=false, qShowAnswer=false, qOff=0, marks=[];
-function rotatedIndex(i,off,N){ return ((i-off)%N + N) % N; }
+function rotatedIndex(i, off, N){ return ((i-off)%N + N) % N; }
 
-/* ============== DOM segédek ============== */
+/* ==== DOM ==== */
 function byId(x){ return document.getElementById(x); }
 
-/* ============== Szöveg szinkron ============== */
-function displayLabel(c){ return (LANG==='HU'?c.titleHU:c.titleEN); }
-function syncMeta(){
-  byId('meta').textContent = tK('caseMeta')(current.montage, diffName(current.diff), displayLabel(current));
-  byId('desc').textContent = (LANG==='HU'?current.descHU:current.descEN);
-  const tagDiv=byId('tags');
-  tagDiv.innerHTML = (current.tags||[]).map(x=>`<span class="chip">${trTag(x)}</span>`).join(' ');
-  byId('explain').textContent = (LANG==='HU'?current.explainHU:current.explainEN);
-  const tips=(LANG==='HU'?current.tipsHU:current.tipsEN); const ul=byId('tips'); ul.innerHTML='';
-  tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); });
-}
-function syncTask(){
-  const txt = LANG==='HU' ? qCurrent.quizTargetHU : qCurrent.quizTargetEN;
-  byId('task').textContent = tK('task')(txt||'events');
-  const has = quizTotal()>0;
-  const ne=byId('noEvents'); ne.style.display=has?'none':'block'; ne.textContent=tK('noEvents');
-}
+/* ==== UI text sync ==== */
 function syncTexts(){
-  byId('tabExplore').textContent=tK('explore');
-  byId('tabIdentify').textContent=tK('identify');
-  byId('tabQuiz').textContent=tK('quiz');
-  byId('tabLessons').textContent=tK('lessons');
-  byId('solutionLbl').textContent=tK('solution');
-  byId('ansLbl').textContent=showAns?tK('on'):tK('off');
-  byId('speedLbl').textContent=tK('speed');
-  byId('spdLbl').textContent=speed.toFixed(1)+'×';
-  byId('explainHdr').textContent=tK('details');
-  byId('tipsHdr').textContent=tK('tips');
-  byId('newIdentify').textContent=tK('newTask');
-  byId('freezeIdentify').textContent=tK('freeze');
-  byId('hintBtn').textContent=tK('hint');
-  byId('guess').placeholder=tK('guessPH');
-  byId('check').textContent=tK('check');
-  byId('resetQuiz').textContent=tK('reset');
-  byId('freezeQuiz').textContent=tK('freeze');
-  byId('snapshotQuiz').textContent=tK('nextSnap');
-  byId('showSolution').textContent=tK('solution')+' + XP';
-  byId('scoreHdr').textContent=tK('score');
-  byId('hitLbl').childNodes[0].textContent=tK('hits')+': ';
-  byId('totalLbl').textContent=tK('total');
-  byId('bestLbl').textContent=tK('best');
-  byId('medalHdr').textContent=tK('medals');
-  byId('footerTxt').textContent=tK('footer');
-  byId('langBtn').textContent=LANG+' ▾';
-  byId('miniQuizHdr').textContent=tK('miniQuiz');
-  byId('lqInstr').textContent=tK('selectAll');
-  byId('lqSubmit').textContent=tK('submit');
+  byId('tabExplore').textContent = tK('explore');
+  byId('tabIdentify').textContent = tK('identify');
+  byId('tabQuiz').textContent = tK('quiz');
+  byId('tabLessons').textContent = tK('lessons');
+  byId('solutionLbl').textContent = tK('solution');
+  byId('ansLbl').textContent = showAns ? tK('on') : tK('off');
+  byId('speedLbl').textContent = tK('speed');
+  byId('spdLbl').textContent = speed.toFixed(1)+'×';
+  byId('explainHdr').textContent = tK('details');
+  byId('tipsHdr').textContent = tK('tips');
+  byId('newIdentify').textContent = tK('newTask');
+  byId('freezeIdentify').textContent = tK('freeze');
+  byId('hintBtn').textContent = tK('hint');
+  byId('guess').placeholder = tK('guessPH');
+  byId('check').textContent = tK('check');
+  byId('resetQuiz').textContent = tK('reset');
+  byId('freezeQuiz').textContent = tK('freeze');
+  byId('snapshotQuiz').textContent = tK('nextSnap');
+  byId('showSolution').textContent = tK('solution')+' + XP';
+  byId('scoreHdr').textContent = tK('score');
+  byId('hitsPrefix').textContent = tK('hits');
+  byId('totalLbl').textContent = tK('total');
+  byId('bestLbl').textContent = tK('best');
+  byId('medalHdr').textContent = tK('medals');
+  byId('footerTxt').textContent = tK('footer');
+  byId('langBtn').textContent = LANG + ' ▾';
+  byId('miniQuizHdr').textContent = tK('miniQuiz');
+  byId('lqInstr').textContent = tK('selectAll');
+  byId('lqSubmit').textContent = tK('submit');
   syncMeta(); syncTask(); refreshMeta();
 }
+function chipHTML(tags){ return tTags(tags).map(x=>`<span class="chip">${x}</span>`).join(' '); }
+function syncMeta(){
+  byId('meta').textContent = tK('caseMeta')(current.montage, tK(current.diff)||current.diff, (LANG==='HU'?current.titleHU:current.titleEN));
+  byId('desc').textContent = (LANG==='HU'?current.descHU:current.descEN);
+  byId('tags').innerHTML = chipHTML(current.tags);
+  byId('explain').textContent = (LANG==='HU'?current.explainHU:current.explainEN);
+  const tips = (LANG==='HU'?current.tipsHU:current.tipsEN);
+  const ul = byId('tips'); ul.innerHTML=''; tips.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); });
+}
+function syncTask(){
+  const txt = LANG==='HU' ? current.quizTargetHU : current.quizTargetEN;
+  const qc = qCurrent;
+  byId('task').textContent = tK('task')(LANG==='HU' ? qc.quizTargetHU||'események' : qc.quizTargetEN||'events');
+  const has = quizTotal()>0;
+  byId('noEvents').style.display = has?'none':'block';
+  byId('noEvents').textContent = tK('noEvents');
+}
 
-/* ============== Tabok ============== */
+/* ==== Tabs ==== */
 function setTab(tab){
   mode=tab;
   byId('tabExplore').className = tab==='explore'?'primary':'ghost';
   byId('tabIdentify').className = tab==='identify'?'primary':'ghost';
-  byId('tabQuiz').className   = tab==='quiz'?'primary':'ghost';
-  byId('tabLessons').className= tab==='lessons'?'primary':'ghost';
-  byId('explore').classList.toggle('hidden',tab!=='explore');
-  byId('identify').classList.toggle('hidden',tab!=='identify');
-  byId('quiz').classList.toggle('hidden',tab!=='quiz');
-  byId('lessons').classList.toggle('hidden',tab!=='lessons');
+  byId('tabQuiz').className = tab==='quiz'?'primary':'ghost';
+  byId('tabLessons').className = tab==='lessons'?'primary':'ghost';
+  byId('explore').classList.toggle('hidden', tab!=='explore');
+  byId('identify').classList.toggle('hidden', tab!=='identify');
+  byId('quiz').classList.toggle('hidden', tab!=='quiz');
+  byId('lessons').classList.toggle('hidden', tab!=='lessons');
 }
 byId('tabExplore').onclick=()=>setTab('explore');
 byId('tabIdentify').onclick=()=>setTab('identify');
 byId('tabQuiz').onclick=()=>setTab('quiz');
 byId('tabLessons').onclick=()=>setTab('lessons');
 
-/* ============== Explore UI ============== */
-const caseSel=byId('caseSel');
+/* ==== Explore ==== */
+const caseSel = byId('caseSel');
 function refreshCaseOptions(){
   caseSel.innerHTML='';
-  CASES.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=displayLabel(c); caseSel.appendChild(o); });
+  CASES.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN);
+    caseSel.appendChild(o);
+  });
   caseSel.value=current.id;
 }
-caseSel.onchange=()=>{ current=CASES.find(c=>c.id===caseSel.value); syncMeta(); };
+caseSel.onchange=()=>{ current = CASES.find(c=>c.id===caseSel.value); syncMeta(); };
 byId('toggleAns').onclick=()=>{ showAns=!showAns; byId('ansLbl').textContent=showAns?tK('on'):tK('off'); };
 byId('playBtn').onclick=()=>{ playing=!playing; byId('playBtn').textContent= playing?'⏯️ '+tK('pause'):'▶️ '+tK('play'); };
 byId('speed').oninput=(e)=>{ speed=parseFloat(e.target.value); byId('spdLbl').textContent=speed.toFixed(1)+'×'; };
 
-/* ============== Identify ============== */
-const difficulty=byId('difficulty'); const idfMeta=byId('idfMeta'); const guess=byId('guess'); const fb=byId('fb');
+/* ==== Identify ==== */
+const difficulty = byId('difficulty');
 function buildDifficulty(){
   const opts=[['beginner',tK('beginner')],['intermediate',tK('intermediate')],['hard',tK('hard')],['expert',tK('expert')],['all',tK('all')]];
-  difficulty.innerHTML=''; opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); });
+  difficulty.innerHTML='';
+  opts.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; difficulty.appendChild(o); });
   difficulty.value=diffFilter;
 }
-difficulty.onchange=()=>{ diffFilter=difficulty.value; };
+const idfMeta = byId('idfMeta'); const guess = byId('guess'); const fb = byId('fb');
+difficulty.onchange=()=>{ diffFilter = difficulty.value; };
 byId('newIdentify').onclick=()=>idRandomCase();
 byId('freezeIdentify').onclick=()=>{ idFreeze=!idFreeze; if(!idFreeze) idOff=0; };
-byId('hintBtn').onclick=()=>{ const initials=idCurrent.label.split(' ').map(w=>w[0].toUpperCase()).join(''); fb.classList.remove('hidden','no'); fb.classList.add('ok'); fb.textContent=tK('hintText')+initials; };
+byId('hintBtn').onclick=()=>{
+  const initials = idCurrent.label.split(' ').map(w=>w[0].toUpperCase()).join('');
+  fb.classList.remove('hidden','no'); fb.classList.add('ok');
+  fb.textContent = tK('hintText') + initials;
+};
 byId('check').onclick=handleIdentify;
-
-function filteredCases(){ if(diffFilter==='all') return CASES; return CASES.filter(c=>c.diff===diffFilter || (diffFilter==='expert'&&c.diff==='expert')); }
+function filteredCases(){ if(diffFilter==='all') return CASES; return CASES.filter(c=>c.diff===diffFilter || (diffFilter==='expert' && c.diff==='expert')); }
 function idRandomCase(){
-  const arr=filteredCases(); idCurrent=arr[Math.floor(Math.random()*arr.length)];
-  idfMeta.textContent=tK('idfMeta')(diffName(idCurrent.diff), idCurrent.montage);
+  const arr=filteredCases(); idCurrent = arr[Math.floor(Math.random()*arr.length)];
+  idfMeta.textContent = tK('idfMeta')(tK(idCurrent.diff)||idCurrent.diff, idCurrent.montage);
   guess.value=''; fb.className='kudos hidden'; fb.textContent='';
 }
 idRandomCase();
 function handleIdentify(){
-  const g=guess.value.trim(); if(!g) return;
+  const g = guess.value.trim(); if(!g) return;
   const ok = isSynonym(g, idCurrent.label);
   fb.classList.remove('hidden'); fb.classList.add(ok?'ok':'no');
-  fb.textContent = ok ? tK('correct') : (tK('wrong')+idCurrent.label);
-  awardXP(ok?20:2); if(ok){ STREAK++; setTimeout(()=>{ idRandomCase(); refreshMeta(); }, 900); } else { STREAK=0; refreshMeta(); } saveProgress();
+  fb.textContent = ok ? tK('correct') : (tK('wrong') + idCurrent.label);
+  awardXP(ok?20:2);
+  if(ok){ STREAK++; setTimeout(()=>{ idRandomCase(); refreshMeta(); }, 900); }
+  else { STREAK=0; refreshMeta(); }
+  saveProgress();
 }
 
-/* ============== Quiz ============== */
-const caseSelQ=byId('caseSelQ');
+/* ==== Quiz + snapshot ==== */
+const caseSelQ = byId('caseSelQ');
 function refreshCaseOptionsQ(){
   caseSelQ.innerHTML='';
-  CASES.filter(c=>c.includeInQuiz).forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=displayLabel(c); caseSelQ.appendChild(o); });
+  CASES.filter(c=>c.includeInQuiz).forEach(c=>{
+    const o=document.createElement('option'); o.value=c.id; o.textContent=(LANG==='HU'?c.titleHU:c.titleEN); caseSelQ.appendChild(o);
+  });
   caseSelQ.value=qCurrent.id;
 }
-caseSelQ.onchange=()=>{ qCurrent=CASES.find(c=>c.id===caseSelQ.value); marks=[]; qShowAnswer=false; qOff=0; syncQuizMeta(); syncTask(); };
+caseSelQ.onchange=()=>{ qCurrent = CASES.find(c=>c.id===caseSelQ.value); marks=[]; qShowAnswer=false; qOff=0; syncQuizMeta(); syncTask(); };
 byId('resetQuiz').onclick=()=>{ marks=[]; qShowAnswer=false; qOff=0; syncQuizMeta(); };
-byId('freezeQuiz').onclick=()=>{ qFreeze=!qFreeze; if(!qFreeze) qOff=0; };
-byId('snapshotQuiz').onclick=()=>{ qFreeze=true; qOff=Math.floor(Math.random()*(qCurrent.sampleRate-1)); syncQuizMeta(); };
-byId('showSolution').onclick=()=>{ qShowAnswer=true; const pct=quizPct(); awardXP(pct>=80?40:15); BEST=Math.max(BEST,pct); saveProgress(); refreshMeta(); };
-byId('eeg3').addEventListener('click',(e)=>{
-  if(mode!=='quiz') return; const r=e.target.getBoundingClientRect();
-  const x=(e.clientX-r.left)*devicePixelRatio, y=(e.clientY-r.top)*devicePixelRatio;
-  marks.push({x,y}); syncQuizMeta();
-});
+byId('freezeQuiz').onclick=()=>{ qFreeze=!qFreeze; if(!qFreeze){ qOff=0; } };
+byId('snapshotQuiz').onclick=()=>{ qFreeze=true; qOff = Math.floor(Math.random()* (qCurrent.sampleRate-1) ); syncQuizMeta(); };
+byId('showSolution').onclick=()=>{ qShowAnswer=true; const pct=quizPct(); awardXP( pct>=80 ? 40 : 15 ); BEST = Math.max(BEST, pct); saveProgress(); refreshMeta(); };
+byId('eeg3').addEventListener('click',(e)=>{ if(mode!=='quiz') return; const r=e.target.getBoundingClientRect(); const x=(e.clientX-r.left)*devicePixelRatio; const y=(e.clientY-r.top)*devicePixelRatio; marks.push({x,y}); syncQuizMeta(); });
 function quizTotal(){ return qCurrent.channels.reduce((a,ch)=>a+(ch.spikes?.length||0),0); }
+const QUIZ_HIT_PX = 70*devicePixelRatio; // nagyobb találati ablak
 function quizHits(off=0){
-  const dx=70*devicePixelRatio; // nagyvonalú találati ablak
   const xScale=(byId('eeg3').width / qCurrent.sampleRate);
-  let correct=0; qCurrent.channels.forEach(ch=> ch.spikes.forEach(sx=>{
-    const pos=rotatedIndex(sx,off,qCurrent.sampleRate); const sxpx=pos*xScale;
-    if(marks.some(m=>Math.abs(m.x-sxpx)<dx)) correct++;
-  })); return correct;
+  let correct=0;
+  qCurrent.channels.forEach(ch=> ch.spikes.forEach(sx=>{
+    const pos = rotatedIndex(sx, off, qCurrent.sampleRate);
+    const sxpx = pos*xScale;
+    if(marks.some(m=>Math.abs(m.x-sxpx)<QUIZ_HIT_PX)) correct++;
+  }));
+  return correct;
 }
 function quizPct(){ const t=quizTotal(); const h=quizHits(qOff); return t?Math.round(h/t*100):0; }
 function syncQuizMeta(){ byId('total').textContent=String(quizTotal()); byId('hits').textContent=String(quizHits(qOff)); const p=quizPct(); byId('pct').textContent=p+'%'; byId('bar').style.width=p+'%'; }
 
-/* ============== Leckék: 3×10 ============== */
-const LESSONS = (()=>{ // 10-10-10 eltérő lecke
+/* ==== Lessons (3×10) ==== */
+const LESSONS = (()=>{ // — a korábbi listákat itt nem sorolom újra: 10-10-10 külön lecke van
+  function mk(level,arr){ return arr.map(([id,hu,en,steps,q])=>({id, level, titleHU:hu, titleEN:en, steps:steps.map(([huS,enS])=>({htmlHU:huS, htmlEN:enS})), quiz:{ qHU:q.qHU, qEN:q.qEN, choices:q.choices.map(([huC,enC,ok,xp])=>({hu:huC,en:enC,ok,xp})) } })); }
   const B = [
-    ['artifact_vs_spike','Artefaktum vs spike','Artifact vs spike',
-      [['Artefaktum: szemmozgás/pislogás frontális dominanciával, nem hegyes.','Artifact: eye blink frontal predominance, not sharp.'],
-       ['Spike: meredek fel/le, gyakran lassú hullám követi.','Spike: steep up/down, often with slow wave.']],
-      {qHU:'Melyik tipikus EMG-re?', qEN:'Which is typical for EMG?', choices:[['Szélessávú zaj','Broadband noise',true,5],['3 Hz SW párok','3 Hz SW pairs',false,0],['Triphasic hullámok','Triphasic waves',false,0]]}],
-    ['benign_variants','Benign variánsok','Benign variants',
-      [['Wicket spike: temporális, benignus.','Wicket spikes: temporal, benign.'],
-       ['POSTS: pozitív occipitalis éles alvásban.','POSTS: positive occipital sharp in sleep.']],
-      {qHU:'Jelöld a benign variánsokat!', qEN:'Mark the benign variants!', choices:[['Wicket spikes','Wicket spikes',true,5],['POSTS','POSTS',true,5],['LPDs','LPDs',false,0]]}],
-    ['sleep_basics','Alvás alapok','Sleep basics',
-      [['N1: vertex élesek megjelenhetnek.','N1: vertex sharps may appear.'],['N2: orsók + K-komplex.','N2: spindles + K-complex.']],
-      {qHU:'Melyik N2-re jellemző?', qEN:'Characteristic of N2?', choices:[['K-komplex','K-complex',true,6],['Mu-ritmus','Mu rhythm',false,0],['Orsók','Spindles',true,6]]}],
-    ['normal_alpha','Normál alfa','Normal alpha',
-      [['8–10 Hz occipitalis, reaktív szemnyitásra.','8–10 Hz occipital, reactive to eye opening.']],
-      {qHU:'Jelöld a normál jeleket!','EN':'Select normal findings!', choices:[['Reaktív alfa','Reactive alpha',true,5],['Generalizált tüske-hullám','Generalized spike–wave',false,0],['Szimmetria','Symmetry',true,5]]}],
-    ['artifact_suite','Artefaktumok','Artifacts',
-      [['Pislogás: frontális lassú deflexió.','Blink: frontal slow deflection.'],['ECG: ritmikus, időzített csúcsok.','ECG: rhythmic time-locked peaks.']],
-      {qHU:'Melyik artefaktum?', qEN:'Which is an artifact?', choices:[['ECG-peak','ECG peak',true,5],['LPDs','LPDs',false,0],['EMG','EMG',true,5]]}],
-    ['firda_oirda','FIRDA vs OIRDA','FIRDA vs OIRDA',
-      [['FIRDA: frontális, encephalopathia.','FIRDA: frontal, encephalopathy.'],['OIRDA: occipitalis, gyermekek.','OIRDA: occipital, children.']],
-      {qHU:'Párosítsd a lokalizációt!', qEN:'Match the location!', choices:[['FIRDA→frontális','FIRDA→frontal',true,6],['OIRDA→occipitalis','OIRDA→occipital',true,6],['OIRDA→frontális','OIRDA→frontal',false,0]}],
-    ['tempo_spikes','Temporális tüskék','Temporal spikes',
-      [['T3/T5 max bal fókusznál.','T3/T5 max in left focus.']],
-      {qHU:'Mi emeli az epileptiform gyanút?','EN':'What supports epileptiform nature?', choices:[['Meredek keskeny csúcs','Steep narrow peak',true,6],['Sima lassú domborulat','Smooth slow hump',false,0],['Lassú hullám kíséret','Associated slow wave',true,6]]}],
-    ['gsw_basics','3 Hz SW alapok','3 Hz SW basics',
-      [['Spike + lassú hullám 2.5–3.5 Hz.','Spike + slow wave 2.5–3.5 Hz.']],
-      {qHU:'Jelöld a helyes állításokat!','EN':'Mark correct statements!', choices:[['Generalizált és szinkron','Generalized and synchronous',true,6],['Artefaktum','Artifact',false,0],['Kísérhet absence','May underlie absence',true,6]]}],
-    ['triphasic_core','Triphasic mag','Triphasic core',
-      [['Három fázis, frontális túlsúly, nem epileptiform.','Three phases, frontal predominance, non-epileptiform.']],
-      {qHU:'Mi NEM igaz triphasic-ra?','EN':'What is NOT true for triphasic?', choices:[['Mindig ictalis','Always ictal',false,0],['Frontális dominancia gyakori','Frontal predominance common',true,6],['Három fázis','Three phases',true,6]]}],
-    ['sirpids_key','SIRPIDs kulcs','SIRPIDs key',
-      [['Stimulus-kapcsolt aktivitás.','Stimulus-linked activity.']],
-      {qHU:'Válaszd ki a SIRPIDs jellemzőit!','EN':'Pick SIRPIDs features!', choices:[['Stimulus után jelenik meg','Appears after stimulus',true,8],['Generalizált 3 Hz','Generalized 3 Hz',false,0],['Ritmikus/periodikus','Rhythmic/periodic',true,6]]}]
+    ['sleep_basics','Alvás alapok','Sleep basics',[
+      ['N1: vertex élesek megjelenhetnek.','N1: vertex sharps may appear.'],
+      ['N2: orsók + K-komplex.','N2: spindles + K-complex.']
+    ], {qHU:'Melyik N2-re jellemző?', qEN:'Characteristic of N2?', choices:[['K-komplex','K-complex',true,6],['Mu-ritmus','Mu rhythm',false,0],['Orsók','Spindles',true,6]]}],
+    ['benign_variants','Benign variánsok','Benign variants',[
+      ['Wicket spikes: temporális, benign.','Wicket spikes: temporal, benign.'],
+      ['POSTS: pozitív occipitalis éles alvásban.','POSTS: positive occipital sharp in sleep.']
+    ], {qHU:'Jelöld a benign variánsokat!', qEN:'Mark the benign variants!', choices:[['Wicket spikes','Wicket spikes',true,5],['POSTS','POSTS',true,5],['LPDs','LPDs',false,0]]}],
+    ['artifact_suite','Artefaktumok 1','Artifacts 1',[
+      ['Pislogás: frontális lassú deflexió.','Blink: frontal slow deflection.'],
+      ['ECG: ritmikus időzített csúcsok.','ECG: rhythmic time-locked peaks.']
+    ], {qHU:'Melyik artefaktum?', qEN:'Which is an artifact?', choices:[['ECG-peak','ECG peak',true,5],['LPDs','LPDs',false,0],['EMG','EMG',true,5]]}],
+    ['gsw_basics','3 Hz SW alapok','3 Hz SW basics',[
+      ['Spike + lassú hullám 2.5–3.5 Hz.','Spike + slow wave 2.5–3.5 Hz.']
+    ], {qHU:'Jelöld a helyes állításokat!', qEN:'Mark correct statements!', choices:[['Generalizált és szinkron','Generalized and synchronous',true,6],['Artefaktum','Artifact',false,0],['Kísérhet absence','May underlie absence',true,6]]}],
+    ['tempo_spikes','Temporális tüskék','Temporal spikes',[
+      ['T3/T5 max bal oldali fókusznál.','T3/T5 max in left focus.']
+    ], {qHU:'Mi emeli meg a gyanút epileptiformitásra?', qEN:'What supports epileptiform nature?', choices:[['Meredek keskeny csúcs','Steep narrow peak',true,6],['Sima lassú domborulat','Smooth slow hump',false,0],['Lassú hullám kíséret','Associated slow wave',true,6]]}],
+    ['artifact_vs_spike','Artefaktum vs. spike','Artifact vs spike',[
+      ['Artefaktum: szemmozgás – nem hegyes.','Artifact: eye blink – not sharp.'],
+      ['Spike: meredek fel/le.','Spike: steep up/down.']
+    ], {qHU:'Melyik tipikus EMG-re?', qEN:'Which is typical for EMG?', choices:[['Szélessávú zaj','Broadband noise',true,5],['3 Hz SW párok','3 Hz SW pairs',false,0],['Triphasic hullámok','Triphasic waves',false,0]]}],
+    ['firda_oirda','FIRDA vs OIRDA','FIRDA vs OIRDA',[
+      ['FIRDA: frontális, encephalopathia.','FIRDA: frontal, encephalopathy.'],
+      ['OIRDA: occipitalis, gyermekek.','OIRDA: occipital, children.']
+    ], {qHU:'Párosítsd a lokalizációt!', qEN:'Match the location!', choices:[['FIRDA→frontális','FIRDA→frontal',true,6],['OIRDA→occipitalis','OIRDA→occipital',true,6],['OIRDA→frontális','OIRDA→frontal',false,0]}],
+    ['normal_alpha','Normál alfa','Normal alpha',[
+      ['8–10 Hz occipitalis, reaktív szemnyitásra.','8–10 Hz occipital, reactive to eye-opening.']
+    ], {qHU:'Jelöld a normál jeleket! ', qEN:'Select normal findings!', choices:[['Reaktív alfa','Reactive alpha',true,5],['Generalizált tüske-hullám','Generalized spike–wave',false,0],['Szimmetria','Symmetry',true,5]]}],
+    ['ecg_vs_spike','EKG vs spike','ECG vs spike',[
+      ['EKG időzített, csatorna-független.','ECG time-locked, channel-independent.']
+    ], {qHU:'Válaszd az EKG-t!', qEN:'Pick ECG!', choices:[['Időzített csúcsok','Time-locked peaks',true,6],['Laterális csúcs','Lateralized spikes',false,0]]}],
+    ['sleep_checks','Alvás ellenőrző','Sleep check',[
+      ['NREM szakaszok felismerése.','Recognize NREM stages.']
+    ], {qHU:'Mi jellemző N1-re?', qEN:'Feature of N1?', choices:[['Vertex éles','Vertex sharp',true,6],['Orsók','Spindles',false,0]]}],
   ];
   const I = [
-    ['artifact_harder','Artefaktum differenciálás','Artifact differentiation',
-      [['EMG vs spike: szélessávú vs keskeny.','EMG vs spike: broadband vs narrow.']],
-      {qHU:'Mi EMG?','EN':'Which is EMG?', choices:[['Szélessávú inkoherens','Broadband incoherent',true,8],['Keskeny hegyes','Narrow sharp',false,0]]}],
-    ['temporal_vs_frontal','Temporális vs frontális','Temporal vs frontal',
-      [['Topográfia segít a lateralizációban.','Topography helps lateralization.']],
-      {qHU:'Melyik frontális?','EN':'Which are frontal?', choices:[['FIRDA','FIRDA',true,6],['OIRDA','OIRDA',false,0],['Frontális spikes','Frontal spikes',true,6]]}],
-    ['ictal_growth','Ictalis evolúció','Ictal evolution',
-      [['Ictalis mintázat frekvencia/amplitúdó növekedéssel evolvál.','Ictal pattern evolves with frequency/amplitude increase.']],
-      {qHU:'Mi jelzi az ictust?','EN':'What indicates ictus?', choices:[['Evolúció','Evolution',true,8],['Statikus periodicitás','Static periodicity',false,0]]}],
-    ['tirda_lrda','TIRDA vs LRDA','TIRDA vs LRDA',
-      [['TIRDA temporális, intermittáló.','TIRDA temporal, intermittent.']],
-      {qHU:'TIRDA jellemzők?','EN':'TIRDA features?', choices:[['Temporális','Temporal',true,6],['Occipitalis','Occipital',false,0],['Intermittáló','Intermittent',true,6]]}],
-    ['gpfa_lgs','GPFA és LGS','GPFA and LGS',
-      [['GPFA gyors paroxizmusok LGS-ben.','GPFA fast paroxysms in LGS.']],
-      {qHU:'GPFA…','EN':'GPFA is…', choices:[['Gyors paroxizmus','Fast paroxysms',true,8],['Delta lassulás','Delta slowing',false,0]]}],
-    ['ecg_vs_spike','EKG vs spike','ECG vs spike',
-      [['EKG időzített, csatorna-független.','ECG time-locked, channel-independent.']],
-      {qHU:'Válaszd az EKG-t!','EN':'Pick ECG!', choices:[['Időzített csúcsok','Time-locked peaks',true,6],['Laterális spikes','Lateralized spikes',false,0]]}],
-    ['posts_wicket','POSTS vs Wicket','POSTS vs Wicket',
-      [['Mind benign, de lokalizáció eltér.','Both benign; localization differs.']],
-      {qHU:'POSTS hol?','EN':'Where are POSTS?', choices:[['Occipitalis','Occipital',true,6],['Frontális','Frontal',false,0],['Temporális','Temporal',false,0]]}],
-    ['grda_enceph','GRDA és encephalopathia','GRDA and encephalopathy',
-      [['GRDA gyakran metabolikus ok.','GRDA often metabolic.']],
-      {qHU:'GRDA-hoz társul?','EN':'Associated with GRDA?', choices:[['Encephalopathia','Encephalopathy',true,6],['Absence roham','Absence seizure',false,0]]}],
-    ['sirpids_decision','SIRPIDs döntés','SIRPIDs decision',
-      [['IIC spektrum; klinikum dönt.','On IIC; clinical context matters.']],
-      {qHU:'Mit teszel SIRPIDs-nél?','EN':'What to do for SIRPIDs?', choices:[['Stimulus-kontroll','Control stimuli',true,6],['Azonnali AED mindenkinél','Immediate AED for all',false,0]]}],
-    ['lpds_management','LPDs menedzsment','LPDs management',
-      [['LPDs akut laesióval társulhat.','LPDs often with acute lesion.']],
-      {qHU:'Mi fontos?','EN':'What matters?', choices:[['Klinikai korrelátum','Clinical correlation',true,8],['Mindig benignus','Always benign',false,0]]}]
+    ['temporal_vs_frontal','Temporális vs frontális','Temporal vs frontal',[
+      ['Topográfia segít a lateralizációban.','Topography helps lateralization.']
+    ], {qHU:'Melyik frontális?', qEN:'Which are frontal?', choices:[['FIRDA','FIRDA',true,6],['OIRDA','OIRDA',false,0],['Frontal spikes','Frontal spikes',true,6]]}],
+    ['tirda_lrda','TIRDA vs LRDA','TIRDA vs LRDA',[
+      ['TIRDA temporális, intermittáló.','TIRDA temporal, intermittent.']
+    ], {qHU:'TIRDA jellemzők?', qEN:'TIRDA features?', choices:[['Temporális','Temporal',true,6],['Occipitalis','Occipital',false,0],['Intermittáló','Intermittent',true,6]]}],
+    ['ictal_growth','Ictalis evolúció','Ictal evolution',[
+      ['Frekvencia/amplitúdó változik.','Frequency/amplitude change.']
+    ], {qHU:'Mi jelzi az ictust?', qEN:'What indicates ictus?', choices:[['Evolúció','Evolution',true,8],['Statikus periodicitás','Static periodicity',false,0]]}],
+    ['lrda_grda','LRDA/GRDA','LRDA/GRDA',[
+      ['LRDA laterális; GRDA diffúz.','LRDA lateralized; GRDA diffuse.']
+    ], {qHU:'Párosítsd!', qEN:'Match!', choices:[['LRDA→laterális','LRDA→lateralized',true,6],['GRDA→generalizált','GRDA→generalized',true,6],['LRDA→occipital benign','LRDA→occipital benign',false,0]}],
+    ['posts_wicket','POSTS vs Wicket','POSTS vs Wicket',[
+      ['Mind benignus, de eltér a lokalizáció.','Both benign; localization differs.']
+    ], {qHU:'POSTS hol?', qEN:'Where are POSTS?', choices:[['Occipitalis','Occipital',true,6],['Frontális','Frontal',false,0],['Temporális','Temporal',false,0]]}],
+    ['sirpids_decision','SIRPIDs döntés','SIRPIDs decision',[
+      ['IIC spektrum, klinikum dönt.','On IIC; clinical context matters.']
+    ], {qHU:'Mit teszel SIRPIDs-nél?', qEN:'What to do for SIRPIDs?', choices:[['Stimulus-kontroll','Control stimuli',true,6],['Azonnali AED mindenkinél','Immediate AED for all',false,0]]}],
+    ['ecg_artifact','EKG artefaktum','ECG artifact',[
+      ['Időzített csúcsok nem epileptiformak.','Time-locked peaks are non-epileptiform.']
+    ], {qHU:'Artefaktum?', qEN:'Artifact?', choices:[['EKG-hez időzített','Time-locked to ECG',true,6],['Evolváló ritmus','Evolving rhythm',false,0]]}],
+    ['tempo_clues','Temporális jelek','Temporal clues',[
+      ['Anterior vs posterior különbségek.','Anterior vs posterior differences.']
+    ], {qHU:'Posterior temporális max?', qEN:'Posterior temporal max?', choices:[['T5/T6','T5/T6',true,6],['F3/F4','F3/F4',false,0]]}],
+    ['artifact_harder','Artefaktum differenciálás','Artifact differentiation',[
+      ['EMG vs spike: szélessávú vs keskeny.','EMG vs spike: broadband vs narrow.']
+    ], {qHU:'Mi EMG?', qEN:'Which is EMG?', choices:[['Szélessávú inkoherens','Broadband incoherent',true,8],['Keskeny hegyes','Narrow sharp',false,0]]}],
+    ['gpfa_intro','GPFA bevezető','GPFA intro',[
+      ['Gyors paroxizmusok LGS-ben.','Fast paroxysms in LGS.']
+    ], {qHU:'GPFA jellemző?', qEN:'GPFA feature?', choices:[['Gyors paroxizmusok','Fast paroxysms',true,8],['3 Hz SW','3 Hz SW',false,0]]}],
   ];
   const E = [
-    ['burst_supp_depth','Burst-supp mélység','Burst-supp depth',
-      [['Burst arány és háttér elnyomás értékelendő.','Assess burst ratio and suppression.']],
-      {qHU:'Mi jelez súlyosságot?','EN':'What indicates severity?', choices:[['Hosszú elnyomás','Long suppression',true,10],['Bőséges GPFA','Abundant GPFA',false,0]]}],
-    ['sreda_pitfall','SREDA buktató','SREDA pitfall',
-      [['Ictal-imitátor; klinikum nélkül ne mondj rohamot.','Ictal mimicker; avoid calling seizure without clinical correlation.']],
-      {qHU:'Mit NEM teszel?','EN':'What NOT to do?', choices:[['Automatikus roham-diagnózis','Auto seizure label',false,0],['Klinikum ellenőrzése','Check clinical context',true,8]]}],
-    ['gpfa_vs_sw','GPFA vs SW','GPFA vs SW',
-      [['GPFA gyors; nem 3 Hz SW.','GPFA fast; not 3 Hz SW.']],
-      {qHU:'Jelöld a GPFA-t!','EN':'Mark GPFA!', choices:[['Gyors paroxizmusok','Fast paroxysms',true,8],['3 Hz spike–wave','3 Hz spike–wave',false,0]]}],
-    ['ictal_localization','Ictus lokalizáció','Ictal localization',
-      [['Időbeli/térbeli evolúció segít a fókuszban.','Temporal/spatial evolution localizes focus.']],
-      {qHU:'Mi segít?','EN':'What helps?', choices:[['Fejlődő ritmus','Evolving rhythm',true,8],['Statikus GRDA','Static GRDA',false,0]]}],
-    ['ncse_spectrum','NCSE spektrum','NCSE spectrum',
-      [['LPDs/GRDA/SIRPIDs értékelése IIC-ben.','Interpret LPDs/GRDA/SIRPIDs on IIC.']],
-      {qHU:'Mi tol NCSE felé?','EN':'Pushes toward NCSE?', choices:[['LPDs klinikai változással','LPDs with clinical change',true,10],['Benign POSTS','Benign POSTS',false,0]]}],
-    ['breach_reading','Breach olvasás','Reading breach',
-      [['Gyors aktivitás hiányzó koponyacsont felett.','Fast activity over skull defect.']],
-      {qHU:'Breach jele?','EN':'Sign of breach?', choices:[['Magas gyors aktivitás','High fast activity',true,8],['Generalizált delta','Generalized delta',false,0]]}],
-    ['temporal_networks','Temporális hálózatok','Temporal networks',
-      [['Anterior vs posterior temporális különbségek.','Anterior vs posterior temporal differences.']],
-      {qHU:'Posterior temporális max?','EN':'Posterior temporal max?', choices:[['T5/T6','T5/T6',true,8],['F3/F4','F3/F4',false,0]]}],
-    ['ictal_artifact','Ictus vs artefaktum','Ictal vs artifact',
-      [['EMG/ECG elkülönítése szükséges.','Differentiate EMG/ECG.']],
-      {qHU:'Artefaktum példa?','EN':'Example of artifact?', choices:[['EKG-hez időzített csúcs','Peaks time-locked to ECG',true,8],['Evolváló ritmus','Evolving rhythm',false,0]]}],
-    ['advanced_localizers','Haladó lokalizátorok','Advanced localizers',
-      [['TIRDA/GPFA jelentősége.','Significance of TIRDA/GPFA.']],
-      {qHU:'TIRDA…','EN':'TIRDA…', choices:[['Temporális rizikójel','Temporal risk marker',true,8],['Frontális benign','Frontal benign',false,0]]}],
-    ['burst_metrics','Burst-metrikák','Burst metrics',
-      [['Arány, hosszak, variancia.','Ratios, lengths, variance.']],
-      {qHU:'Mit mérsz?','EN':'What do you measure?', choices:[['Burst/suppression arány','Burst/suppression ratio',true,10],['Csak alfa frekvencia','Only alpha frequency',false,0]]}]
+    ['burst_supp_depth','Burst-supp mélység','Burst-supp depth',[
+      ['Burst arány és elnyomás hossza.','Burst ratio and suppression length.']
+    ], {qHU:'Mi mutat súlyos állapotot?', qEN:'What indicates severity?', choices:[['Hosszú elnyomás','Long suppression',true,10],['Abundáns GPFA','Abundant GPFA',false,0]]}],
+    ['sreda_pitfall','SREDA buktató','SREDA pitfall',[
+      ['Ictal-imitátor időseknél.','Ictal mimicker in elderly.']
+    ], {qHU:'Mit NEM teszel?', qEN:'What NOT to do?', choices:[['Automatikus roham-diagnózis','Auto seizure label',false,0],['Klinikum ellenőrzése','Check clinical context',true,8]]}],
+    ['ictal_localization','Ictus lokalizáció','Ictal localization',[
+      ['Tér-időbeli evolúció segít fókuszban.','Spatiotemporal evolution helps localization.']
+    ], {qHU:'Mi segít?', qEN:'What helps?', choices:[['Fejlődő ritmus','Evolving rhythm',true,8],['Statikus GRDA','Static GRDA',false,0]]}],
+    ['ncse_spectrum','NCSE spektrum','NCSE spectrum',[
+      ['LPDs/GRDA/SIRPIDs értelmezése IIC-ben.','Interpret LPDs/GRDA/SIRPIDs on IIC.']
+    ], {qHU:'NCSE felé tol?', qEN:'Pushes toward NCSE?', choices:[['LPDs klinikummal','LPDs with clinical change',true,10],['Benign POSTS','Benign POSTS',false,0]]}],
+    ['advanced_localizers','Haladó lokalizátorok','Advanced localizers',[
+      ['TIRDA/GPFA jelentősége.','Significance of TIRDA/GPFA.']
+    ], {qHU:'TIRDA…', qEN:'TIRDA…', choices:[['Temporális rizikójel','Temporal risk marker',true,8],['Frontális benign','Frontal benign',false,0]]}],
+    ['burst_metrics','Burst-metrikák','Burst metrics',[
+      ['Arány, hosszak, variancia.','Ratios, lengths, variance.']
+    ], {qHU:'Mit mérsz?', qEN:'What do you measure?', choices:[['Burst/suppression arány','Burst/suppression ratio',true,10],['Csak alfa frekvencia','Only alpha frequency',false,0]]}],
+    ['ictal_artifact','Ictus vs artefaktum','Ictal vs artifact',[
+      ['EMG/ECG elkülönítése szükséges.','Differentiate EMG/ECG.']
+    ], {qHU:'Artefaktum példa?', qEN:'Example of artifact?', choices:[['EKG-hez időzített csúcs','Peaks time-locked to ECG',true,8],['Evolváló ritmus','Evolving rhythm',false,0]]}],
+    ['expert_temporal','Expert temporális','Expert temporal',[
+      ['Anterior/posterior temporális hálózatok.','Anterior/posterior temporal networks.']
+    ], {qHU:'Posterior jel?', qEN:'Posterior sign?', choices:[['T5/T6 max','T5/T6 max',true,8],['F7/F8 max','F7/F8 max',false,0]]}],
+    ['gpd_variants','GPD variánsok','GPD variants',[
+      ['Metabolikus/post-anoxiás összefüggések.','Metabolic/post-anoxic associations.']
+    ], {qHU:'GPD kapcsán…', qEN:'About GPDs…', choices:[['Diffúz periodicitás','Diffuse periodicity',true,8],['Mindig roham','Always seizure',false,0]]}],
+    ['deep_sirpids','SIRPIDs haladó','SIRPIDs advanced',[
+      ['Stimulus-függő ritmus döntést igényel.','Stimulus-locked rhythm needs decision-making.']
+    ], {qHU:'Legjobb első lépés?', qEN:'Best first step?', choices:[['Stimulus csökkentés','Reduce stimuli',true,8],['Azonnali antiepileptikum','Immediate AED',false,0]]}],
   ];
-  function mk(level,arr){
-    return arr.map(([id,hu,en,steps,q])=>({
-      id, level, titleHU:hu, titleEN:en,
-      steps:steps.map(([huS,enS])=>({htmlHU:huS, htmlEN:enS})),
-      quiz:{ qHU:q.qHU||q.qHU, qEN:q.qEN||q.qEN, choices:q.choices.map(([huC,enC,ok,xp])=>({hu:huC,en:enC,ok,xp})) }
-    }));
-  }
   return [...mk('beginner',B), ...mk('intermediate',I), ...mk('expert',E)];
 })();
-
-const lessonLevelSel=byId('lessonLevel'); const lessonSel=byId('lessonSel');
+const lessonLevelSel = byId('lessonLevel'); const lessonSel = byId('lessonSel');
 function refreshLessons(){
-  const levels=[['beginner',tK('lessonsBeginner')],['intermediate',tK('lessonsIntermediate')],['expert',tK('lessonsExpert')],['all',tK('all')]];
+  const levels = [['beginner',tK('lessonsBeginner')],['intermediate',tK('lessonsIntermediate')],['expert',tK('lessonsExpert')],['all',tK('all')]];
   lessonLevelSel.innerHTML=''; levels.forEach(([v,txt])=>{ const o=document.createElement('option'); o.value=v; o.textContent=txt; lessonLevelSel.appendChild(o); });
-  if(!lessonLevelSel.value) lessonLevelSel.value='beginner';
-  const lvl=lessonLevelSel.value;
-  const list=LESSONS.filter(L=> lvl==='all' || L.level===lvl);
+  const lvl = lessonLevelSel.value||'beginner';
+  const list = LESSONS.filter(L=> lvl==='all' || L.level===lvl);
   lessonSel.innerHTML=''; list.forEach(L=>{ const o=document.createElement('option'); o.value=L.id; o.textContent=(LANG==='HU'?L.titleHU:L.titleEN); lessonSel.appendChild(o); });
 }
 lessonLevelSel.onchange=refreshLessons;
 function renderLesson(id){
-  const L=LESSONS.find(x=>x.id===id); const body=byId('lessonBody'); body.innerHTML='';
-  L.steps.forEach(step=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML=(LANG==='HU'?step.htmlHU:step.htmlEN); body.appendChild(card); });
+  const L = LESSONS.find(x=>x.id===id); const body=byId('lessonBody'); body.innerHTML='';
+  L.steps.forEach(step=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML = (LANG==='HU'?step.htmlHU:step.htmlEN); body.appendChild(card); });
   const q=byId('lessonQuiz'); q.classList.remove('hidden');
-  byId('lqQ').textContent=(LANG==='HU'?L.quiz.qHU:L.quiz.qEN);
+  byId('lqQ').textContent = (LANG==='HU'?L.quiz.qHU:L.quiz.qEN);
   const choices=byId('lqChoices'); choices.innerHTML='';
   L.quiz.choices.forEach((c,i)=>{
-    const wrap=document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
-    const cb=document.createElement('input'); cb.type='checkbox'; const txt=document.createElement('span'); txt.textContent=(LANG==='HU'?c.hu:c.en);
+    const id=`lq_${L.id}_${i}`; const wrap=document.createElement('label'); wrap.style.display='flex'; wrap.style.alignItems='center'; wrap.style.gap='8px';
+    const cb=document.createElement('input'); cb.type='checkbox'; cb.id=id;
+    const txt=document.createElement('span'); txt.textContent=(LANG==='HU'?c.hu:c.en);
     wrap.appendChild(cb); wrap.appendChild(txt); choices.appendChild(wrap);
   });
   byId('lqSubmit').onclick=()=>{
-    let gained=0, best=0; const cbs=choices.querySelectorAll('input');
-    L.quiz.choices.forEach((c,i)=>{ best+= (c.ok?c.xp:0); if(cbs[i].checked && c.ok) gained+=c.xp; });
-    const fb=byId('lqFb'); fb.classList.remove('hidden'); fb.classList.add('ok'); fb.textContent=tK('gained')+gained+' • '+tK('bestPossible')+best;
+    let gained=0, best=0;
+    L.quiz.choices.forEach((c,i)=>{ best+= (c.ok?c.xp:0); const cb=choices.querySelectorAll('input')[i]; if(cb.checked && c.ok) gained+=c.xp; });
+    const fb=byId('lqFb'); fb.classList.remove('hidden'); fb.classList.add('ok');
+    fb.textContent = tK('gained') + gained + ' • ' + tK('bestPossible') + best;
     if(gained>0) awardXP(gained);
   };
 }
 byId('startLesson').onclick=()=> renderLesson(lessonSel.value);
 
-/* ============== Rajzolás ============== */
+/* ==== Drawing (with the earlier ctx.lineTo bug fixed) ==== */
 function fitCanvas(c){ const w=c.clientWidth*devicePixelRatio, h=c.clientHeight*devicePixelRatio; if(c.width!==w||c.height!==h){ c.width=w; c.height=h; } }
-function toXY(c,i,yVal,idx,chCount,sampleRate){ const xScale=c.width/sampleRate; const chGap=(c.height-40)/chCount; const yBase=20+idx*chGap+chGap/2; const yScale=12*devicePixelRatio; return {x:i*xScale,y:yBase-yVal*yScale,yBase,chGap}; }
-
+function toXY(c, i, yVal, idx, chCount, sampleRate){ const xScale = c.width / sampleRate; const chGap=(c.height-40)/chCount; const yBase=20+idx*chGap+chGap/2; const yScale=12*devicePixelRatio; return {x:i*xScale, y:yBase - yVal*yScale, yBase, chGap}; }
 function drawExplore(){
-  const canvas=byId('eeg'); fitCanvas(canvas); if(playing){ tExplore=(tExplore+0.06*speed)%current.sampleRate; }
-  const off=Math.floor(tExplore); const ctx=canvas.getContext('2d'); ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const canvas=byId('eeg'); fitCanvas(canvas);
+  if(playing){ tExplore = (tExplore + 0.06*speed) % current.sampleRate; }
+  const off=Math.floor(tExplore); const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='#142038'; ctx.lineWidth=1;
   for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
-  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); } /* <-- FIXED */
   ctx.lineWidth=2;
   current.channels.forEach((ch,idx)=>{
-    const rotated=ch.data.slice(off).concat(ch.data.slice(0,off));
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
     ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
     rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,current.channels.length,current.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
     ctx.stroke();
     const p0=toXY(canvas,0,0,idx,current.channels.length,current.sampleRate);
     ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
-    if(showAns){
-      ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{
-        const pos=rotatedIndex(sx,off,current.sampleRate); const x=pos*(canvas.width/current.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio);
-        ctx.beginPath(); ctx.arc(x,y,16*devicePixelRatio,0,Math.PI*2); ctx.stroke();
-      });
-    }
+    if(showAns){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{ const pos=rotatedIndex(sx,off,current.sampleRate); const x=pos*(canvas.width/current.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio); ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); }
   });
   requestAnimationFrame(drawExplore);
 }
@@ -834,10 +725,10 @@ function drawIdentify(){
   ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='#142038'; ctx.lineWidth=1;
   for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
-  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(x=canvas.width,y); ctx.stroke(); }
+  for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
   ctx.lineWidth=2;
   idCurrent.channels.forEach((ch,idx)=>{
-    const rotated=ch.data.slice(off).concat(ch.data.slice(0,off));
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
     ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
     rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,idCurrent.channels.length,idCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
     ctx.stroke();
@@ -851,36 +742,30 @@ requestAnimationFrame(drawIdentify);
 function drawQuiz(){
   const canvas=byId('eeg3'); fitCanvas(canvas); const ctx=canvas.getContext('2d');
   if(!qFreeze){ qOff=Math.floor((performance.now()*0.06*speed)%qCurrent.sampleRate); }
-  const off=qOff; ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const off=qOff;
+  ctx.fillStyle='#0b0f1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='#142038'; ctx.lineWidth=1;
   for(let x=0;x<canvas.width;x+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
   for(let y=0;y<canvas.height;y+=50*devicePixelRatio){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
   ctx.lineWidth=2;
   qCurrent.channels.forEach((ch,idx)=>{
-    const rotated=ch.data.slice(off).concat(ch.data.slice(0,off));
+    const rotated = ch.data.slice(off).concat(ch.data.slice(0,off));
     ctx.strokeStyle='#dbe5ff'; ctx.beginPath();
     rotated.forEach((v,i)=>{ const p=toXY(canvas,i,v,idx,qCurrent.channels.length,qCurrent.sampleRate); if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
     ctx.stroke();
     const p0=toXY(canvas,0,0,idx,qCurrent.channels.length,qCurrent.sampleRate);
     ctx.fillStyle='#93a3c8'; ctx.font=(12*devicePixelRatio)+'px system-ui'; ctx.fillText(ch.name, 10*devicePixelRatio, p0.yBase - p0.chGap/2 + 14*devicePixelRatio);
-    if(qShowAnswer){
-      ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{
-        const pos=rotatedIndex(sx,off,qCurrent.sampleRate); const x=pos*(canvas.width/qCurrent.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio);
-        ctx.beginPath(); ctx.arc(x,y,16*devicePixelRatio,0,Math.PI*2); ctx.stroke();
-      });
-    }
+    if(qShowAnswer){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=3; ch.spikes.forEach(sx=>{ const pos=rotatedIndex(sx,off,qCurrent.sampleRate); const x=pos*(canvas.width/qCurrent.sampleRate); const y=p0.yBase - rotated[pos]*(12*devicePixelRatio); ctx.beginPath(); ctx.arc(x,y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); }); }
   });
-  // a játékos kattintásai – nagyobb jelölés
-  ctx.strokeStyle='#60a5fa'; ctx.lineWidth=3;
-  marks.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,18*devicePixelRatio,0,Math.PI*2); ctx.stroke(); });
-  const pct=quizPct(); const hits=quizHits(off);
-  byId('hits').textContent=String(hits); byId('pct').textContent=pct+'%'; byId('bar').style.width=pct+'%';
+  // nagyobb kattintás jelölés
+  ctx.strokeStyle='#60a5fa'; ctx.lineWidth=3; marks.forEach(m=>{ ctx.beginPath(); ctx.arc(m.x,m.y,14*devicePixelRatio,0,Math.PI*2); ctx.stroke(); });
+  const pct=quizPct(); const hits=quizHits(off); byId('hits').textContent=String(hits); byId('pct').textContent=pct+'%'; byId('bar').style.width=pct+'%';
   requestAnimationFrame(drawQuiz);
 }
 requestAnimationFrame(drawQuiz);
 
-/* ============== Események ============== */
-byId('langBtn').onclick=()=> setLang(LANG==='HU'?'EN':'HU');
+/* ==== Events ==== */
+byId('langBtn').onclick=()=>{ setLang(LANG==='HU'?'EN':'HU'); };
 document.addEventListener('keydown',(e)=>{
   if(e.key===' '){
     if(mode==='explore'){ playing=!playing; byId('playBtn').textContent= playing?'⏯️ '+tK('pause'):'▶️ '+tK('play'); }
@@ -892,14 +777,15 @@ document.addEventListener('keydown',(e)=>{
   if(e.key==='ArrowLeft'){ speed=Math.max(0.5, speed-0.1); byId('speed').value=String(speed); byId('spdLbl').textContent=speed.toFixed(1)+'×'; }
 });
 
-/* ============== Init + kis önellenőrzés ============== */
+/* ==== Init ==== */
 function init(){
   refreshCaseOptions(); refreshCaseOptionsQ(); buildDifficulty(); refreshLessons();
   syncTexts(); setTab('explore');
-  try{
-    console.assert(typeof quizTotal()==='number','quizTotal should return number');
-    console.assert(document.getElementById('lessonSel'),'lessonSel missing');
-  }catch(e){ console.error('Self-test',e); }
+  // Basic self-checks (non-blocking)
+  try {
+    console.assert(typeof quizTotal()==='number', 'quizTotal() number');
+    console.assert(document.getElementById('lessonSel'), 'lessonSel present');
+  } catch(e){ console.warn('Self-test', e); }
 }
 init();
 </script>
